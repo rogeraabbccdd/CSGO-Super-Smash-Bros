@@ -58,6 +58,11 @@ forward Action SB_OnItemSpawn(const char[] name, float pos[3]);
 - Add simple damage HUD text.
 - Prevent SetClientDamage to negative value.
 
+### 0.3
+- Fix BGM timer.
+- Fix item spawn timer.
+- Fix trigger_hurt detect.
+
 ## Video Preview
 <a href="https://www.youtube.com/watch?v=3M2km3ePzAY" target="_blank">
   <img height="300" src="https://i.ytimg.com/vi/3M2km3ePzAY/maxresdefault.jpg">
