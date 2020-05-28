@@ -52,6 +52,12 @@ forward Action SB_OnItemSpawn(const char[] name, float pos[3]);
 - Items config.
 - Spawn items on map and items API.
 
+### 0.2
+- Add default items settings in config.
+- Add BGM settings.
+- Add simple damage HUD text.
+- Prevent SetClientDamage to negative value.
+
 ## Video Preview
 <a href="https://www.youtube.com/watch?v=3M2km3ePzAY" target="_blank">
   <img height="300" src="https://i.ytimg.com/vi/3M2km3ePzAY/maxresdefault.jpg">
