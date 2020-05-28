@@ -74,10 +74,10 @@ float fvol[MAXPLAYERS+1];
 int TriggerHurts[MAXTRIGGER_HURTS];
 int TriggerCount = 0;
 
+#include "kento_smashbros/convars.sp"
 #include "kento_smashbros/natives.sp"
 #include "kento_smashbros/config.sp"
 #include "kento_smashbros/items.sp"
-#include "kento_smashbros/convars.sp"
 #include "kento_smashbros/commands.sp"
 #include "kento_smashbros/hitlogic.sp"
 #include "kento_smashbros/events.sp"
@@ -88,7 +88,7 @@ public Plugin myinfo =
   name = "[CS:GO] Super Smash Bros - Core",
   author = "Kento",
   description = "Core plugin of Super Smash Bros",
-  version = "0.3",
+  version = "0.4",
   url = "http://steamcommunity.com/id/kentomatoryoshika/"
 };
 
@@ -126,7 +126,7 @@ public Action DisplayInformation(Handle timer) {
         if(IsValidClient(lastAttack[i]) && IsPlayerAlive(lastAttack[i])) {
           int la = lastAttack[i];
           SetHudTextParams(0.63, 0.60, 0.11, 255, 255, 255, 255);
-          ShowSyncHudText(i, TargetDamageMessage, "Enemy: %.2f%%", fPlayerDMG[la]);
+          ShowSyncHudText(i, TargetDamageMessage, "%N: %.2f%%", la, fPlayerDMG[la]);
         }
       }
     }
@@ -212,9 +212,7 @@ public void OnClientPostAdminCheck(int client) {
   SDKHook(client, SDKHook_TraceAttack, TraceAttack);
   SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
-  lastAttackBy[client].attacker = 0;
-  Format(lastAttackBy[client].weapon, 64, "");
-  lastAttack[client] = 0;
+  ResetClientStatus(client);
 }
 
 public void OnClientDisconnect(int client){
@@ -226,14 +224,12 @@ public void OnClientDisconnect(int client){
   StopBGM(client, currentBGM);
   KillBGMTimer(client);
 
-  lastAttackBy[client].attacker = 0;
-  Format(lastAttackBy[client].weapon, 64, "");
-  lastAttack[client] = 0;
-
   for (int i = 1; i <= MaxClients; i++)
   {
     if(lastAttack[i] == client) lastAttack[i] = 0;
   }
+
+  ResetClientStatus(client);
 }
 
 stock bool IsValidClient(int client)

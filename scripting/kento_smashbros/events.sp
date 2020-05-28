@@ -54,8 +54,9 @@ public Action Event_RoundStart (Event event, const char[] name, bool dontBroadca
       {
         StopBGM(i, prevBGM);
         KillBGMTimer(i);
-        
         hBGMTimer[i] = CreateTimer(0.5, BGMTimer, i);
+
+        ResetClientStatus(i);
       }
     }
   }
