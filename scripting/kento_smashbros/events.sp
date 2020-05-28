@@ -34,12 +34,13 @@ public Action Event_PlayerDeath (Event event, const char[] name, bool dontBroadc
 public Action Event_RoundStart (Event event, const char[] name, bool dontBroadcast)
 {
   if(spawnroundstart) SpawnItems();
+  
   if(spawninterval > 0.0) {
     if(itemTimer != INVALID_HANDLE)
     {
       KillTimer(itemTimer);
+      itemTimer = INVALID_HANDLE;
     }
-    itemTimer = INVALID_HANDLE;
     itemTimer = CreateTimer(spawninterval, SpawnItemTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
   }
 

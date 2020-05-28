@@ -1,10 +1,10 @@
-// Handle fall damage
+// Handle fall damage, trigger_hurt and other stuff.
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3]){
-  if(DEBUG) PrintToChatAll("OnTakeDamage: %N,%f", victim, damage);
-  if(RoundToCeil(damage) > MAXHEALTHCHECK) {
+  if(DEBUG) PrintToChatAll("OnTakeDamage: %N,%f, %d", victim, damage, inflictor);
+  if(IsMapTriggerHurt(inflictor)) {
     return Plugin_Continue;
   }
-  else KnockBack(victim, damage);
+  else if(!(damagetype & DMG_FALL)) KnockBack(victim, damage);
   damage = 0.0;
   return Plugin_Changed;
 }
@@ -56,4 +56,15 @@ void KnockBack(int victim, float damage) {
   vReturn[2] = Sine(DegToRad(vAngles[0])) * totaldamage * fCvarUpwardForce;
 
   TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, vReturn);
+}
+
+bool IsMapTriggerHurt(int entity) {
+  bool result = false;
+  for(int i=0;i<TriggerCount;i++) {
+    if(entity == TriggerHurts[i]) {
+      result = true;
+      break;
+    }
+  }
+  return result;
 }

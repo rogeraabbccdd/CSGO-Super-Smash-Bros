@@ -11,8 +11,8 @@ void KillBGMTimer(int client) {
   if(hBGMTimer[client] != INVALID_HANDLE)
   {
     KillTimer(hBGMTimer[client]);
+    hBGMTimer[client] = INVALID_HANDLE;
   }
-  hBGMTimer[client] = INVALID_HANDLE;
 }
 
 public Action BGMTimer(Handle tmr, any client)

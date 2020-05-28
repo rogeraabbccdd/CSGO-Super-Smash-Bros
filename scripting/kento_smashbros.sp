@@ -16,9 +16,10 @@
 
 #pragma newdecls required
 
-#define MAXHEALTHCHECK 500
+#define MAXHEALTHCHECK 500.0
 #define MAXITEMS 100
 #define MAXBGMS 100
+#define MAXTRIGGER_HURTS 100
 
 bool DEBUG = true
 
@@ -69,6 +70,10 @@ int currentBGM = -1;
 Handle clientVolCookie;
 float fvol[MAXPLAYERS+1];
 
+// Trigger hurts on map
+int TriggerHurts[MAXTRIGGER_HURTS];
+int TriggerCount = 0;
+
 #include "kento_smashbros/natives.sp"
 #include "kento_smashbros/config.sp"
 #include "kento_smashbros/items.sp"
@@ -83,7 +88,7 @@ public Plugin myinfo =
   name = "[CS:GO] Super Smash Bros - Core",
   author = "Kento",
   description = "Core plugin of Super Smash Bros",
-  version = "0.2",
+  version = "0.3",
   url = "http://steamcommunity.com/id/kentomatoryoshika/"
 };
 
@@ -149,6 +154,16 @@ public void OnMapStart () {
   {
     AcceptEntityInput(iEnt,"kill"); //Destroy the entity
   }
+  
+  while((iEnt = FindEntityByClassname(iEnt, "trigger_hurt")) != -1) //Find buyzone
+  {
+    float dmg = GetEntPropFloat(iEnt, Prop_Data, "m_flDamage");
+    LogError("trigger entity %d, %f", iEnt, dmg);
+    if(dmg >= 100.0)  {
+      TriggerHurts[TriggerCount] = iEnt;
+      TriggerCount++;
+    }
+  }
 
   char sMapName[128], sMapName2[128];
   GetCurrentMap(sMapName, sizeof(sMapName));
@@ -189,7 +204,7 @@ public void OnClientPutInServer(int client)
     
   if(currentBGM > -1)
   {
-    hBGMTimer[client] = CreateTimer(2.0, BGMTimer, client);
+    hBGMTimer[client] = CreateTimer(2.0, BGMTimer, client, TIMER_FLAG_NO_MAPCHANGE);
   }
 }
 
