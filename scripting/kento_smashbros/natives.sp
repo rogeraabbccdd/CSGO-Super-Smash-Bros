@@ -19,7 +19,7 @@ public int Native_SetClientDamage(Handle plugin, int numParams)
   int client = GetNativeCell(1);
   float dmg = GetNativeCell(2);
   if(IsValidClient(client)) {
-    fPlayerDMG[client] = dmg;
+    fPlayerDMG[client] = dmg >= 0.0 ? dmg : 0.0;
     return true;
   }
   else return false;

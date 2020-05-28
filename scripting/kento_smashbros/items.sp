@@ -25,7 +25,7 @@ void SpawnItems() {
       }
 
       // decide what item to spawn
-      float chance = GetRandomFloat(0.0, 100.0);
+      float chance = GetRandomFloat(0.0, totalChace);
       int itemid = GetItemByChance(chance);
       char itemname[64];
       Format(itemname, sizeof(itemname), "%s", items[itemid].name);
@@ -47,7 +47,7 @@ int GetItemByChance (float chance) {
   float totalChance = 0.0;
   for(int i=0;i<itemCount;i++) {
     totalChance += items[0].chance;
-    if(chance < totalChance) {
+    if(chance <= totalChance) {
       idx = i;
       break;
     }

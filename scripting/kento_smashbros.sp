@@ -3,7 +3,7 @@
 // FFA mode
 // time deathmatch
 // lifes
-// item api
+// spec
 
 #include <sourcemod>
 #include <sdktools>
@@ -11,21 +11,16 @@
 #include <cstrike>
 #include <kento_smashbros>
 #include <navareautilities>
+#include <kento_csgocolors>
+#include <clientprefs>
 
 #pragma newdecls required
 
 #define MAXHEALTHCHECK 500
 #define MAXITEMS 100
+#define MAXBGMS 100
 
 bool DEBUG = true
-
-// Cvar
-ConVar sb_upward_force;
-ConVar sb_angles;
-ConVar sb_dmg_multiplier;
-float fCvarUpwardForce;
-float fCvarAngles;
-float fCvarDMGMultiplier;
 
 // Natives
 Handle OnItemSpawn;
@@ -35,11 +30,15 @@ enum struct LAST_ATTACK {
   int attacker;
   char weapon[64];
 }
-LAST_ATTACK lastAttack[MAXPLAYERS + 1];
+LAST_ATTACK lastAttackBy[MAXPLAYERS + 1];
+int lastAttack[MAXPLAYERS + 1];
 
 // Player damage
 float fPlayerDMG[MAXPLAYERS + 1] = {0.0, ...}
-Handle PrintDmgTimer[MAXPLAYERS + 1] = {INVALID_HANDLE, ...};
+
+// Display infos
+Handle YourDamageMessage;
+Handle TargetDamageMessage;
 
 // Map configs
 bool isNAUReady = false;
@@ -52,8 +51,23 @@ enum struct ITEMS {
   float chance;
 }
 ITEMS items[MAXITEMS];
+float totalChace = 0.0;
 Handle itemTimer = INVALID_HANDLE;
 
+// BGM configs
+enum struct BGM {
+  char name[1024];
+  char file[1024];
+  float length;
+}
+BGM bgm[MAXBGMS];
+int bgmCount = 0;
+Handle hBGMTimer[MAXPLAYERS + 1] = {INVALID_HANDLE, ...};
+int currentBGM = -1;
+
+// Cookie
+Handle clientVolCookie;
+float fvol[MAXPLAYERS+1];
 
 #include "kento_smashbros/natives.sp"
 #include "kento_smashbros/config.sp"
@@ -62,13 +76,14 @@ Handle itemTimer = INVALID_HANDLE;
 #include "kento_smashbros/commands.sp"
 #include "kento_smashbros/hitlogic.sp"
 #include "kento_smashbros/events.sp"
+#include "kento_smashbros/bgm.sp"
 
 public Plugin myinfo =
 {
   name = "[CS:GO] Super Smash Bros - Core",
   author = "Kento",
   description = "Core plugin of Super Smash Bros",
-  version = "0.1",
+  version = "0.2",
   url = "http://steamcommunity.com/id/kentomatoryoshika/"
 };
 
@@ -80,8 +95,36 @@ public void OnPluginStart()
   HookEvent("player_death", Event_PlayerDeath, EventHookMode_Pre);
   HookEvent("round_start", Event_RoundStart, EventHookMode_Post);
 
+  clientVolCookie = RegClientCookie("sb_vol", "Super Smash Bros Volume", CookieAccess_Protected);
+
+  LoadTranslations("kento.smashbros.phrases");
+
+  TargetDamageMessage = CreateHudSynchronizer();
+  YourDamageMessage = CreateHudSynchronizer();
+
   if(DEBUG) {
     RegConsoleCmd("sm_dmg", Command_Damage);
+    RegConsoleCmd("sm_alldmg", Command_AllDamage);
+  }
+}
+
+public Action DisplayInformation(Handle timer) {
+  for (int i = 1; i <= MaxClients; i++)
+  {
+    if(IsValidClient(i) && !IsFakeClient(i))
+    {
+      if(IsPlayerAlive(i))
+      {
+        SetHudTextParams(0.27, 0.60, 0.11, 255, 255, 255, 255);
+        ShowSyncHudText(i, YourDamageMessage, "You: %.2f%%", fPlayerDMG[i]);
+
+        if(IsValidClient(lastAttack[i]) && IsPlayerAlive(lastAttack[i])) {
+          int la = lastAttack[i];
+          SetHudTextParams(0.63, 0.60, 0.11, 255, 255, 255, 255);
+          ShowSyncHudText(i, TargetDamageMessage, "Enemy: %.2f%%", fPlayerDMG[la]);
+        }
+      }
+    }
   }
 }
 
@@ -107,28 +150,75 @@ public void OnMapStart () {
     AcceptEntityInput(iEnt,"kill"); //Destroy the entity
   }
 
-  LoadMapConfig();
+  char sMapName[128], sMapName2[128];
+  GetCurrentMap(sMapName, sizeof(sMapName));
+
+  // Does current map string contains a "workshop" prefix at a start?
+  if (strncmp(sMapName, "workshop", 8) == 0)
+  {
+    Format(sMapName2, sizeof(sMapName2), sMapName[19]);
+  }
+  else
+  {
+    Format(sMapName2, sizeof(sMapName2), sMapName);
+  }
+
+  LoadMapConfig(sMapName2);
+  LoadBGMConfig(sMapName2);
+
+  CreateTimer(0.1, DisplayInformation, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+}
+
+public void OnClientCookiesCached(int client)
+{
+  char buffer[5];
+  GetClientCookie(client, clientVolCookie, buffer, 5);
+  if(!StrEqual(buffer, ""))
+  {
+    fvol[client] = StringToFloat(buffer);
+  }
+  if(StrEqual(buffer,"")){
+    fvol[client] = 0.8;
+  }
+}
+
+public void OnClientPutInServer(int client)
+{
+  if(!IsValidClient(client) && IsFakeClient(client))
+    return;
+    
+  if(currentBGM > -1)
+  {
+    hBGMTimer[client] = CreateTimer(2.0, BGMTimer, client);
+  }
 }
 
 public void OnClientPostAdminCheck(int client) {
   SDKHook(client, SDKHook_TraceAttack, TraceAttack);
   SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
-  lastAttack[client].attacker = 0;
+  lastAttackBy[client].attacker = 0;
+  Format(lastAttackBy[client].weapon, 64, "");
+  lastAttack[client] = 0;
 }
 
 public void OnClientDisconnect(int client){
   SDKUnhook(client, SDKHook_TraceAttack, TraceAttack);
   SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
-  if(PrintDmgTimer[client] != INVALID_HANDLE)
-  {
-    KillTimer(PrintDmgTimer[client]);
-    PrintDmgTimer[client] = INVALID_HANDLE;
-  }
+  if(IsFakeClient(client)) return;
 
-  lastAttack[client].attacker = 0;
-  Format(lastAttack[client].weapon, 64, "");
+  StopBGM(client, currentBGM);
+  KillBGMTimer(client);
+
+  lastAttackBy[client].attacker = 0;
+  Format(lastAttackBy[client].weapon, 64, "");
+  lastAttack[client] = 0;
+
+  for (int i = 1; i <= MaxClients; i++)
+  {
+    if(lastAttack[i] == client) lastAttack[i] = 0;
+  }
 }
 
 stock bool IsValidClient(int client)
