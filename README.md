@@ -10,41 +10,8 @@ Super Smash Bros gamemode for CSGO.
 
 ## Developers
 You can create item modules for variety experiences.  
-Example item module plugin: [CSGO Weapons](https://github.com/rogeraabbccdd/CSGO-Super-Smash-Bros-CSGOWeapons)
-
-```c
-#if defined _kento_sb_included
-  #endinput
-#endif
-
-/**
- * Gets client damages.
- *
- * @param client     Player index.
- * @return	client damages.
- */
-native float SB_GetClientDamage(int client);
-
-/**
- * Sets client damages.
- *
- * @param client     Player index.
- * @param damage     Damage value to set.
- * @return	true if success, otherwise false.
- */
-native float SB_SetClientDamage(int client, float damage);
-
-/**
- * When item should spawn.
- *
- * @param name     Item name.
- * @param pos      Position array.
- * @param vMins     vMins array.
- * @param vMaxs     vMaxs array.
- * @return	no return.
- */
-forward Action SB_OnItemSpawn(const char[] name, float pos[3]);
-```
+Example item module plugin: [CSGO Weapons](https://github.com/rogeraabbccdd/CSGO-Super-Smash-Bros-CSGOWeapons)  
+Check [include file](https://github.com/rogeraabbccdd/CSGO-Super-Smash-Bros/blob/master/scripting/include/kento_smashbros.inc) for more info.
 
 ## Changelog
 ### 0.1
@@ -62,6 +29,13 @@ forward Action SB_OnItemSpawn(const char[] name, float pos[3]);
 - Fix BGM timer.
 - Fix item spawn timer.
 - Fix trigger_hurt detect.
+
+### 0.4
+- Split damage multiplier to give multiplier and take multiplier.
+- Multipliers are set by client now.
+- Add "sb_ff" svar.
+- Fix molotov damage and grenade damage.
+- Add more natives.
 
 ## Video Preview
 <a href="https://www.youtube.com/watch?v=3M2km3ePzAY" target="_blank">
