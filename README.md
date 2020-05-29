@@ -37,6 +37,14 @@ Check [include file](https://github.com/rogeraabbccdd/CSGO-Super-Smash-Bros/blob
 - Fix molotov damage and grenade damage.
 - Add more natives.
 
+### 0.5
+- Add freezetime countdown timer.
+- Add set BGM volume command.
+- Add gamemode menu.
+- Fix BGM timer length.
+- Fix BGM not stop.
+- Knock back player to correct direction, not just push up.
+
 ## Video Preview
 <a href="https://www.youtube.com/watch?v=3M2km3ePzAY" target="_blank">
   <img height="300" src="https://i.ytimg.com/vi/3M2km3ePzAY/maxresdefault.jpg">
