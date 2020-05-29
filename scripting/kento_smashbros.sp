@@ -21,7 +21,7 @@
 #define MAXBGMS 100
 #define MAXTRIGGER_HURTS 100
 
-bool DEBUG = true
+bool DEBUG = true;
 
 // Natives
 Handle OnItemSpawn;
@@ -55,7 +55,7 @@ ITEMS items[MAXITEMS];
 float totalChace = 0.0;
 Handle itemTimer = INVALID_HANDLE;
 
-// BGM configs
+// BGM configs1
 enum struct BGM {
   char name[1024];
   char file[1024];
@@ -74,6 +74,9 @@ float fvol[MAXPLAYERS+1];
 int TriggerHurts[MAXTRIGGER_HURTS];
 int TriggerCount = 0;
 
+int bWarmUp = false;
+
+#include "kento_smashbros/funcs.sp"
 #include "kento_smashbros/convars.sp"
 #include "kento_smashbros/natives.sp"
 #include "kento_smashbros/config.sp"
@@ -82,13 +85,15 @@ int TriggerCount = 0;
 #include "kento_smashbros/hitlogic.sp"
 #include "kento_smashbros/events.sp"
 #include "kento_smashbros/bgm.sp"
+#include "kento_smashbros/assets.sp"
+#include "kento_smashbros/menus.sp"
 
 public Plugin myinfo =
 {
   name = "[CS:GO] Super Smash Bros - Core",
   author = "Kento",
   description = "Core plugin of Super Smash Bros",
-  version = "0.4",
+  version = "0.5",
   url = "http://steamcommunity.com/id/kentomatoryoshika/"
 };
 
@@ -107,8 +112,13 @@ public void OnPluginStart()
   TargetDamageMessage = CreateHudSynchronizer();
   YourDamageMessage = CreateHudSynchronizer();
 
+  RegConsoleCmd("sm_sb", Command_SmashBros);
+  RegConsoleCmd("sm_sbvol", Command_Volume);
+
   if(DEBUG) {
+    // Set damage to all players
     RegConsoleCmd("sm_dmg", Command_Damage);
+    // Show all players' damage
     RegConsoleCmd("sm_alldmg", Command_AllDamage);
   }
 }
@@ -116,9 +126,11 @@ public void OnPluginStart()
 public Action DisplayInformation(Handle timer) {
   for (int i = 1; i <= MaxClients; i++)
   {
-    if(IsValidClient(i) && !IsFakeClient(i))
+    if(IsValidClient(i))
     {
-      if(IsPlayerAlive(i))
+      int score = RoundToFloor(fPlayerDMG[i]*100);
+      CS_SetClientContributionScore(i, score);
+      if(IsPlayerAlive(i) && !IsFakeClient(i))
       {
         SetHudTextParams(0.27, 0.60, 0.11, 255, 255, 255, 255);
         ShowSyncHudText(i, YourDamageMessage, "You: %.2f%%", fPlayerDMG[i]);
@@ -181,6 +193,8 @@ public void OnMapStart () {
   LoadMapConfig(sMapName2);
   LoadBGMConfig(sMapName2);
 
+  LoadAssets();
+
   CreateTimer(0.1, DisplayInformation, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
 
@@ -230,12 +244,4 @@ public void OnClientDisconnect(int client){
   }
 
   ResetClientStatus(client);
-}
-
-stock bool IsValidClient(int client)
-{
-  if (client <= 0) return false;
-  if (client > MaxClients) return false;
-  if (!IsClientConnected(client)) return false;
-  return IsClientInGame(client);
 }

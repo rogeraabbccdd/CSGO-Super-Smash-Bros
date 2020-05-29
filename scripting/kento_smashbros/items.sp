@@ -3,6 +3,15 @@ public void NAU_OnNavAreasLoaded()
 	isNAUReady = true;
 }
 
+void StartRoundItemTimer() {
+  if(itemTimer != INVALID_HANDLE)
+  {
+    KillTimer(itemTimer);
+    itemTimer = INVALID_HANDLE;
+  }
+  itemTimer = CreateTimer(spawninterval, SpawnItemTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+}
+
 public Action SpawnItemTimer (Handle timer) {
   SpawnItems();
 }

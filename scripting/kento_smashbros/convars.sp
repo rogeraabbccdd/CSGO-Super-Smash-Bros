@@ -4,6 +4,7 @@ ConVar sb_givedmg_multiplier;
 ConVar sb_takedmg_multiplier;
 ConVar sb_pushback_multiplier;
 ConVar sb_ff;
+ConVar mp_freezetime;
 
 float fCvarUpwardForce;
 float fCvarAngles;
@@ -11,6 +12,9 @@ float fCvarGiveDMGMultiplier;
 float fCvarTakeDMGMultiplier;
 float fCvarPushBackMultiplier;
 bool bCvarff;
+int iCvarFreezetime;
+int freezetime;
+Handle freezetimeTimer;
 
 float fClientUpwardForce[MAXPLAYERS + 1];
 float fClientAngles[MAXPLAYERS + 1];
@@ -26,12 +30,16 @@ void CreateConVars () {
   sb_pushback_multiplier = CreateConVar("sb_pushback_multiplier", "5.0", "Default push back distance by damage\nif set to 3.0, distance will be damage*3.0", FCVAR_NOTIFY, true, 0.0);
   sb_ff = CreateConVar("sb_ff", "0", "Allow friendly fire or not.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
+  mp_freezetime = FindConVar("mp_freezetime");
+
   sb_upward_force.AddChangeHook(OnConVarChanged);
   sb_angles.AddChangeHook(OnConVarChanged);
   sb_givedmg_multiplier.AddChangeHook(OnConVarChanged);
   sb_takedmg_multiplier.AddChangeHook(OnConVarChanged);
   sb_pushback_multiplier.AddChangeHook(OnConVarChanged);
   sb_ff.AddChangeHook(OnConVarChanged);
+
+  mp_freezetime.AddChangeHook(OnConVarChanged);
 
   AutoExecConfig(true, "kento_smashbros");
 }
@@ -62,6 +70,10 @@ public void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] n
   {
     bCvarff = sb_ff.BoolValue;
   }
+  else if (convar == mp_freezetime)
+  {
+    iCvarFreezetime = mp_freezetime.IntValue;
+  }
 }
 
 void GetConVarValues() {
@@ -71,4 +83,5 @@ void GetConVarValues() {
   fCvarTakeDMGMultiplier = sb_takedmg_multiplier.FloatValue;
   fCvarPushBackMultiplier = sb_pushback_multiplier.FloatValue;
   bCvarff = sb_ff.BoolValue;
+  iCvarFreezetime = mp_freezetime.IntValue;
 }

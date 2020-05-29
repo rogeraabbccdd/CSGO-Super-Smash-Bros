@@ -6,7 +6,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
     return Plugin_Continue;
   }
   // Ignore fall damage
-  else if(!(damagetype & DMG_FALL)) {
+  else if(!(damagetype & DMG_FALL) && damage > 0.0) {
     char name[64];
     GetEdictClassname(inflictor, name, sizeof(name));
 
@@ -14,7 +14,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
     if (StrContains(name, "inferno") != -1 || StrContains(name, "grenade") != -1)
     {
       int owner = GetEntPropEnt(inflictor, Prop_Data, "m_hOwnerEntity");
-      PrintToChatAll("owner: %N", owner);
+      if(DEBUG) PrintToChatAll("owner: %N", owner);
 
       if(IsValidClient(owner)) {
         if(bCvarff || (!bCvarff && GetClientTeam(victim) != GetClientTeam(attacker))) {
@@ -23,15 +23,19 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
           if(StrContains(name, "inferno") != -1)  Format(lastAttackBy[victim].weapon, 64, "inferno");
           if(StrContains(name, "hegrenade") != -1)  Format(lastAttackBy[victim].weapon, 64, "hegrenade");
           lastAttack[owner] = victim;
+          KnockBack(victim);
         }
       }
-      else fPlayerDMG[victim] += damage * fClientTakeDMGMultiplier[victim];
+      else {
+        fPlayerDMG[victim] += damage * fClientTakeDMGMultiplier[victim];
+        KnockBack(victim);
+      }
     }
     // other damage
     else {
       fPlayerDMG[victim] += damage * fClientTakeDMGMultiplier[victim];
+      KnockBack(victim);
     }
-    KnockBack(victim);
   }
   damage = 0.0;
   return Plugin_Changed;
@@ -48,7 +52,7 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
     
     if(DEBUG) PrintToChat(attacker, "TraceAttack: %N,%f", victim, damage);
     
-    KnockBack(victim);
+    KnockBack(victim, attacker);
   
     lastAttackBy[victim].attacker = attacker;
 
@@ -78,16 +82,33 @@ public void FakeDeath(int victim, int attacker)
   event.Fire()
 }
 
-void KnockBack(int victim) {
+void KnockBack(int victim, int attacker = -1) {
   // Code taken from TF2 Smash Bros
   // https://forums.alliedmods.net/showthread.php?p=2309303
   float totaldamage = fPlayerDMG[victim] * fClientPushBackMultiplier[victim];
   float vAngles[3], vReturn[3];
 
   vAngles[0] = fClientAngles[victim];
-  vReturn[0] = Cosine(DegToRad(vAngles[1])) * totaldamage;
-  vReturn[1] = Sine(DegToRad(vAngles[1])) * totaldamage;
-  vReturn[2] = Sine(DegToRad(vAngles[0])) * totaldamage * fClientUpwardForce[victim];
+
+  if(attacker != -1)
+  {
+    float atkpos[3], victimpos[3];
+
+    GetClientAbsOrigin(attacker, atkpos);
+    GetEntPropVector(victim, Prop_Data, "m_vecAbsOrigin", victimpos);
+    MakeVectorFromPoints(atkpos, victimpos, vReturn);
+    NormalizeVector(vReturn, vReturn);
+    ScaleVector(vPush, totaldamage);
+
+    // vReturn[0] = Cosine(DegToRad(vAngles[1])) * totaldamage * -1.0;
+    // vReturn[1] = Sine(DegToRad(vAngles[1])) * totaldamage * -1.0;
+    vReturn[2] = Sine(DegToRad(vAngles[0])) * totaldamage * fClientUpwardForce[victim];
+  }
+  else {
+    vReturn[0] = Cosine(DegToRad(vAngles[1])) * totaldamage * -1.0;
+    vReturn[1] = Sine(DegToRad(vAngles[1])) * totaldamage * -1.0;
+    vReturn[2] = Sine(DegToRad(vAngles[0])) * totaldamage * fClientUpwardForce[victim];
+  }
 
   TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, vReturn);
 }

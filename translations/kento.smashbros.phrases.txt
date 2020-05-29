@@ -7,10 +7,48 @@
 //**********************************************************************************************************************
 "Phrases"
 {
+	// PrintToChat
 	"BGM"
 	{
 		"#format"		"{1:s}"
 		"en"			"{GREEN}[SB] {NORMAL}BGM: {PINK}{1}"
 		"zho"			"{GREEN}[SB] {NORMAL}BGM: {PINK}{1}"
+	}
+	// Menu
+	"Main Menu Title"
+	{
+		"#format"		""
+		"en"			"Super Smash Bros Menu"
+		"zho"			"Super Smash Bros Menu"
+	}
+	"Main Menu Volume"
+	{
+		"#format"		""
+		"en"			"Volume Settings"
+		"zho"			"音量設定"
+	}
+	"Volume Menu Title"
+	{
+		"#format"		"{1:s}"
+		"en"			"Volume Settings\nCurrent Volume:{1}\nUse !sbvol for fine tuning"
+		"zho"			"音量設定\n目前音量:{1}\n使用 !sbvol 微調"
+	}
+	"Mute"
+	{
+		"#format"		""
+		"en"			"Mute"
+		"zho"			"靜音"	
+	}
+	"Volume 1"
+	{
+		"#format"		""
+		"en"			"{GREEN}[MVP] {NORMAL}Volume values must be {RED}0.0- 1.0"
+		"zho"			"{GREEN}[MVP] {NORMAL}音量大小限制為 {RED}0.0 - 1.0"
+	}
+	"Volume 2"
+	{
+		"#format"		"{1:.2f}"
+		"en"			"{GREEN}[MVP] {NORMAL}Volume is set to {PINK}{1}"
+		"zho"			"{GREEN}[MVP] {NORMAL}音量設定為 {PINK}{1}"
 	}
 }	

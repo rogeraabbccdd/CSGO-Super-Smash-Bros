@@ -35,29 +35,60 @@ public Action Event_RoundStart (Event event, const char[] name, bool dontBroadca
 {
   if(spawnroundstart) SpawnItems();
   
-  if(spawninterval > 0.0) {
-    if(itemTimer != INVALID_HANDLE)
+  if(spawninterval > 0.0) StartRoundItemTimer();
+
+  StartRoundBGM();
+
+  for (int i = 1; i <= MaxClients; i++)
+  {
+    if(IsValidClient(i))
     {
-      KillTimer(itemTimer);
-      itemTimer = INVALID_HANDLE;
+      ResetClientStatus(i);
     }
-    itemTimer = CreateTimer(spawninterval, SpawnItemTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
   }
 
-  if(bgmCount > 0) {
-    int prevBGM = currentBGM;
-    currentBGM = GetRandomInt(0, bgmCount-1);
+  if(!bWarmUp) {
+    freezetime = iCvarFreezetime;
+    freezetimeTimer = CreateTimer(1.0, Countdown, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+  }
+}
+
+public Action Countdown(Handle timer)
+{
+  freezetime--;
+  if(freezetime <= 3)
+  {
+    char snd[64];
+    Format(snd, sizeof(snd), "*/kento_smashbros/sfx/%d.mp3", freezetime);
+    
+    char overlay[64];
+    if(freezetime > -1)  Format(overlay, sizeof(overlay), "kento_smashbros/%d", freezetime);
+    else if(freezetime == -1)  Format(overlay, sizeof(overlay), "", freezetime);
 
     for (int i = 1; i <= MaxClients; i++)
     {
       if(IsValidClient(i) && !IsFakeClient(i))
       {
-        StopBGM(i, prevBGM);
-        KillBGMTimer(i);
-        hBGMTimer[i] = CreateTimer(0.5, BGMTimer, i);
+        SetClientOverlay(i, overlay);
+        if(freezetime > -1) EmitSoundToClient(i, snd, SOUND_FROM_PLAYER, SNDCHAN_STATIC, SNDLEVEL_NONE, _, fvol[i]);
+      }
+    }
 
-        ResetClientStatus(i);
+    if(freezetime == -1)
+    {
+      if(freezetimeTimer != INVALID_HANDLE)
+      {
+        KillTimer(freezetimeTimer);
+        freezetimeTimer = INVALID_HANDLE;
       }
     }
   }
+}
+
+public void OnGameFrame()
+{
+  if(GameRules_GetProp("m_bWarmupPeriod") == 1)
+    bWarmUp = true;
+
+  else bWarmUp = false;
 }

@@ -215,9 +215,3 @@ void LoadBGMConfig(const char [] mapname)
   kv.Rewind();
   delete kv;
 }
-
-// https://wiki.alliedmods.net/Csgo_quirks
-stock void FakePrecacheSound(const char[] szPath)
-{
-  AddToStringTable(FindStringTable("soundprecache"), szPath);
-}
