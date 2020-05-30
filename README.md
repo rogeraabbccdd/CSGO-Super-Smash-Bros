@@ -45,6 +45,13 @@ Check [include file](https://github.com/rogeraabbccdd/CSGO-Super-Smash-Bros/blob
 - Fix BGM not stop.
 - Knock back player to correct direction, not just push up.
 
+### 0.6
+- Add forward SB_OnTakeDamage.
+- Add round end overlay.
+- Add round end countdown sound.
+- Fix item spawn timer.
+- Add hitgroup multiplier cvars.
+
 ## Video Preview
 <a href="https://www.youtube.com/watch?v=3M2km3ePzAY" target="_blank">
   <img height="300" src="https://i.ytimg.com/vi/3M2km3ePzAY/maxresdefault.jpg">
