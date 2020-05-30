@@ -28,14 +28,21 @@ public Action Event_PlayerDeath (Event event, const char[] name, bool dontBroadc
     if(lastAttack[i] == client) lastAttack[i] = 0;
   }
 
+  ResetClientStatus(client);
+
   return Plugin_Continue;
 }
 
 public Action Event_RoundStart (Event event, const char[] name, bool dontBroadcast)
 {
+  ResetTimers();
+  
   if(spawnroundstart) SpawnItems();
   
-  if(spawninterval > 0.0) StartRoundItemTimer();
+  if(spawninterval > 0.0) {
+    KillItemTimer();
+    StartRoundItemTimer();
+  }
 
   StartRoundBGM();
 
@@ -43,13 +50,21 @@ public Action Event_RoundStart (Event event, const char[] name, bool dontBroadca
   {
     if(IsValidClient(i))
     {
+      SetClientOverlay(i, "");
       ResetClientStatus(i);
     }
   }
 
+  CreateTimer(0.0001, startTimerDelay);
+}
+
+public Action startTimerDelay(Handle timer)
+{
   if(!bWarmUp) {
-    freezetime = iCvarFreezetime;
+    freezetime = RoundToFloor(fCvarFreezetime);
     freezetimeTimer = CreateTimer(1.0, Countdown, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+    roundtime = fmp_roundtime * 60.0 + fCvarFreezetime;
+    hRoundCountdown = CreateTimer(1.0, RoundCountdown, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
   }
 }
 
@@ -59,7 +74,8 @@ public Action Countdown(Handle timer)
   if(freezetime <= 3)
   {
     char snd[64];
-    Format(snd, sizeof(snd), "*/kento_smashbros/sfx/%d.mp3", freezetime);
+    if(freezetime > 0) Format(snd, sizeof(snd), "*/kento_smashbros/sfx/%d.mp3", freezetime);
+    else if(freezetime > -1) Format(snd, sizeof(snd), "*/kento_smashbros/sfx/go.mp3", freezetime);
     
     char overlay[64];
     if(freezetime > -1)  Format(overlay, sizeof(overlay), "kento_smashbros/%d", freezetime);
@@ -81,6 +97,70 @@ public Action Countdown(Handle timer)
         KillTimer(freezetimeTimer);
         freezetimeTimer = INVALID_HANDLE;
       }
+    }
+  }
+}
+
+public Action Event_RoundEnd (Event event, const char[] name, bool dontBroadcast)
+{
+  char message[256];
+  event.GetString("message", message, sizeof(message));
+
+  char overlay[64];
+  char snd[64];
+  
+  // Round Draw
+  // play timeover sound
+  if(StrEqual(message,"#SFUI_Notice_Round_Draw", false))
+  {
+    Format(overlay, sizeof(overlay), "kento_smashbros/timeup");
+    Format(snd, sizeof(snd), "*/kento_smashbros/sfx/timeup.mp3");
+  }
+  else {
+    Format(overlay, sizeof(overlay), "kento_smashbros/gameset");
+    Format(snd, sizeof(snd), "*/kento_smashbros/sfx/gameset.mp3");
+  }
+
+  for (int i = 1; i <= MaxClients; i++)
+  {
+    if(IsValidClient(i) && !IsFakeClient(i))
+    {
+      SetClientOverlay(i, overlay);
+      EmitSoundToClient(i, snd, SOUND_FROM_PLAYER, SNDCHAN_STATIC, SNDLEVEL_NONE, _, fvol[i]);
+    }
+  }
+
+  event.BroadcastDisabled = true; 
+  
+  ResetTimers();
+
+  return Plugin_Changed;
+}
+
+public Action RoundCountdown(Handle tmr)
+{
+  --roundtime;
+
+  if (roundtime <= 5.0 && roundtime > 0.0)
+  {
+    char snd[64];
+    Format(snd, sizeof(snd), "*/kento_smashbros/sfx/%d.mp3", RoundToFloor(roundtime));
+
+    for (int i = 1; i <= MaxClients; i++)
+    {
+      if (IsValidClient(i) && !IsFakeClient(i)) 
+      {
+        EmitSoundToClient(i, snd, SOUND_FROM_PLAYER, SNDCHAN_STATIC, SNDLEVEL_NONE, _, fvol[i]);
+      }
+    }
+  }
+
+  else if (roundtime <= 0)
+  {
+    if(hRoundCountdown != INVALID_HANDLE)
+    {
+      KillTimer(hRoundCountdown);
+      hRoundCountdown = INVALID_HANDLE;
     }
   }
 }

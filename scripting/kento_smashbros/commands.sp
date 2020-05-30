@@ -59,3 +59,12 @@ public Action Command_Volume (int client, int args)
   }
   return Plugin_Handled;
 }
+
+public Action Command_MyDamage(int client, int args)
+{
+  PrintToChat(client, "fClientUpwardForce %f", fClientUpwardForce[client]);
+  PrintToChat(client, "fClientAngles %f", fClientAngles[client]);
+  PrintToChat(client, "fClientGiveDMGMultiplier %f", fClientGiveDMGMultiplier[client]);
+  PrintToChat(client, "fClientTakeDMGMultiplier %f", fClientTakeDMGMultiplier[client]);
+  PrintToChat(client, "fClientPushBackMultiplier %f", fClientPushBackMultiplier[client]);
+}

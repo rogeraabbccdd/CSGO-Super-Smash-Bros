@@ -109,8 +109,17 @@ native float SB_SetClientAngle(int client, float angle);
  *
  * @param name     Item name.
  * @param pos      Position array.
- * @param vMins     vMins array.
- * @param vMaxs     vMaxs array.
  * @return	no return.
  */
 forward Action SB_OnItemSpawn(const char[] name, float pos[3]);
+
+/**
+ * When player take damage.
+ *
+ * @param victim     Victim player index.
+ * @param attacker     Attacker player index.
+ * @param inflictor     inflictor entity index, -1 if invalid.
+ * @param damage      Damage
+ * @return	no return.
+ */
+forward Action SB_OnTakeDamage(int victim, int attacker, int inflictor, float damage);

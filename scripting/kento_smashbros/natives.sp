@@ -16,6 +16,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
   CreateNative("SB_SetClientAngle", Native_SetClientAngle);
 
   OnItemSpawn = CreateGlobalForward("SB_OnItemSpawn", ET_Ignore, Param_String, Param_Array);
+  OnSBTakeDamage = CreateGlobalForward("SB_OnTakeDamage", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Float);
 
   RegPluginLibrary("kento_smashbros");
 }

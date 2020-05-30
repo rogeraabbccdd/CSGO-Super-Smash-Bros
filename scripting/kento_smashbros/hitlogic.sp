@@ -1,14 +1,24 @@
 // Handle fall damage, trigger_hurt and other stuff.
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3]){
   if(DEBUG) PrintToChatAll("OnTakeDamage: %N,%f, %d", victim, damage, inflictor);
+
   // Killed by trigger_hurt in map
   if(IsMapTriggerHurt(inflictor)) {
+    if(DEBUG) PrintToChatAll("Is map trigger");
     return Plugin_Continue;
   }
+
+  // Not hitting player
+  if(!IsValidClient(victim)) {
+    return Plugin_Continue;
+  }
+
   // Ignore fall damage
   else if(!(damagetype & DMG_FALL) && damage > 0.0) {
     char name[64];
     GetEdictClassname(inflictor, name, sizeof(name));
+
+    float dmgadd;
 
     // Handle molotov
     if (StrContains(name, "inferno") != -1 || StrContains(name, "grenade") != -1)
@@ -18,7 +28,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
       if(IsValidClient(owner)) {
         if(bCvarff || (!bCvarff && GetClientTeam(victim) != GetClientTeam(attacker))) {
-          fPlayerDMG[victim] += damage * fClientGiveDMGMultiplier[owner] * fClientTakeDMGMultiplier[victim];
+          dmgadd = damage * fClientGiveDMGMultiplier[owner] * fClientTakeDMGMultiplier[victim];
+          fPlayerDMG[victim] += dmgadd;
           lastAttackBy[victim].attacker = owner;
           if(StrContains(name, "inferno") != -1)  Format(lastAttackBy[victim].weapon, 64, "inferno");
           if(StrContains(name, "hegrenade") != -1)  Format(lastAttackBy[victim].weapon, 64, "hegrenade");
@@ -27,15 +38,24 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
         }
       }
       else {
-        fPlayerDMG[victim] += damage * fClientTakeDMGMultiplier[victim];
+        dmgadd = damage * fClientTakeDMGMultiplier[victim];
+        fPlayerDMG[victim] += dmgadd;
         KnockBack(victim);
       }
     }
     // other damage
     else {
-      fPlayerDMG[victim] += damage * fClientTakeDMGMultiplier[victim];
+      dmgadd = damage * fClientTakeDMGMultiplier[victim];
+      fPlayerDMG[victim] += dmgadd;
       KnockBack(victim);
     }
+
+    Call_StartForward(OnSBTakeDamage);
+    Call_PushCell(victim);
+    Call_PushCell(attacker);
+    Call_PushCell(inflictor);
+    Call_PushFloat(dmgadd);
+    Call_Finish();
   }
   damage = 0.0;
   return Plugin_Changed;
@@ -43,14 +63,46 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 // Handle weapon damage
 public Action TraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup){
-  if(!IsValidClient(victim)) return Plugin_Continue;
-  
+  if(!IsValidClient(victim) || !IsValidClient(attacker)) return Plugin_Continue;
+
   if(bCvarff || (!bCvarff && GetClientTeam(victim) != GetClientTeam(attacker)))
   {
-    float dmgadd = damage * fClientGiveDMGMultiplier[attacker] * fClientTakeDMGMultiplier[victim];
+    float hitmultiplier = 1.0;
+    switch(hitgroup){
+      case 1:
+      {
+        hitmultiplier = fCvarhead_multiplier;
+      }
+      case 2:
+      {
+        hitmultiplier = fCvarchest_multiplier;
+      }
+      case 3:
+      {
+        hitmultiplier = fCvarstomach_multiplier;
+      }
+      case 4:
+      {
+        hitmultiplier = fCvarleftarm_multiplier;
+      }
+      case 5:
+      {
+        hitmultiplier = fCvarrightarm_multiplier;
+      }
+      case 6:
+      {
+        hitmultiplier = fCvarleftleg_multiplier;
+      }
+      case 7:
+      {
+        hitmultiplier = fCvarrightleg_multiplier;
+      }
+    }
+
+    float dmgadd = damage * hitmultiplier * fClientGiveDMGMultiplier[attacker] * fClientTakeDMGMultiplier[victim];
     fPlayerDMG[victim] += dmgadd;
     
-    if(DEBUG) PrintToChat(attacker, "TraceAttack: %N,%f", victim, damage);
+    if(DEBUG) PrintToChat(attacker, "TraceAttack: %N,%f, %d", victim, damage, hitgroup);
     
     KnockBack(victim, attacker);
   
@@ -66,20 +118,18 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
     }
 
     lastAttack[attacker] = victim;
+
+    Call_StartForward(OnSBTakeDamage);
+    Call_PushCell(victim);
+    Call_PushCell(attacker);
+    Call_PushCell(inflictor);
+    Call_PushFloat(dmgadd);
+    Call_Finish();
   }
 
   damage = 0.0;
 
   return Plugin_Changed;
-}
-
-public void FakeDeath(int victim, int attacker)
-{
-  Event event = CreateEvent("player_death");
-  SetEventBool(event, "sourcemod", true);
-  event.SetInt("attacker", GetClientUserId(attacker));
-  event.SetInt("userid", GetClientUserId(victim));
-  event.Fire()
 }
 
 void KnockBack(int victim, int attacker = -1) {
@@ -98,7 +148,7 @@ void KnockBack(int victim, int attacker = -1) {
     GetEntPropVector(victim, Prop_Data, "m_vecAbsOrigin", victimpos);
     MakeVectorFromPoints(atkpos, victimpos, vReturn);
     NormalizeVector(vReturn, vReturn);
-    ScaleVector(vPush, totaldamage);
+    ScaleVector(vReturn, totaldamage);
 
     // vReturn[0] = Cosine(DegToRad(vAngles[1])) * totaldamage * -1.0;
     // vReturn[1] = Sine(DegToRad(vAngles[1])) * totaldamage * -1.0;

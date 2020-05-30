@@ -1,10 +1,3 @@
-// Plan:
-// Team mode
-// FFA mode
-// time deathmatch
-// lifes
-// spec
-
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -25,6 +18,7 @@ bool DEBUG = true;
 
 // Natives
 Handle OnItemSpawn;
+Handle OnSBTakeDamage;
 
 // Last attacker info for rewrite player death event
 enum struct LAST_ATTACK {
@@ -74,6 +68,11 @@ float fvol[MAXPLAYERS+1];
 int TriggerHurts[MAXTRIGGER_HURTS];
 int TriggerCount = 0;
 
+// Countdowns
+Handle freezetimeTimer = INVALID_HANDLE;
+float roundtime;
+Handle hRoundCountdown = INVALID_HANDLE;
+
 int bWarmUp = false;
 
 #include "kento_smashbros/funcs.sp"
@@ -93,7 +92,7 @@ public Plugin myinfo =
   name = "[CS:GO] Super Smash Bros - Core",
   author = "Kento",
   description = "Core plugin of Super Smash Bros",
-  version = "0.5",
+  version = "0.6",
   url = "http://steamcommunity.com/id/kentomatoryoshika/"
 };
 
@@ -103,7 +102,8 @@ public void OnPluginStart()
 
   HookEvent("player_spawn", Event_PlayerSpawn);
   HookEvent("player_death", Event_PlayerDeath, EventHookMode_Pre);
-  HookEvent("round_start", Event_RoundStart, EventHookMode_Post);
+  HookEvent("round_start", Event_RoundStart);
+  HookEvent("round_end", Event_RoundEnd, EventHookMode_Pre);
 
   clientVolCookie = RegClientCookie("sb_vol", "Super Smash Bros Volume", CookieAccess_Protected);
 
@@ -120,6 +120,8 @@ public void OnPluginStart()
     RegConsoleCmd("sm_dmg", Command_Damage);
     // Show all players' damage
     RegConsoleCmd("sm_alldmg", Command_AllDamage);
+    // Show my status
+    RegConsoleCmd("sm_mydmg", Command_MyDamage);
   }
 }
 
@@ -170,10 +172,11 @@ public void OnMapStart () {
   while((iEnt = FindEntityByClassname(iEnt, "trigger_hurt")) != -1) //Find buyzone
   {
     float dmg = GetEntPropFloat(iEnt, Prop_Data, "m_flDamage");
-    LogError("trigger entity %d, %f", iEnt, dmg);
+    
     if(dmg >= 100.0)  {
       TriggerHurts[TriggerCount] = iEnt;
       TriggerCount++;
+      LogError("map trigger %d", iEnt);
     }
   }
 
@@ -208,6 +211,27 @@ public void OnClientCookiesCached(int client)
   }
   if(StrEqual(buffer,"")){
     fvol[client] = 0.8;
+  }
+}
+
+public void OnMapEnd()
+{
+  KillItemTimer();
+  
+  if(freezetimeTimer != INVALID_HANDLE)
+  {
+    KillTimer(freezetimeTimer);
+    freezetimeTimer = INVALID_HANDLE;
+  }
+
+  for (int i = 1; i <= MaxClients; i++)
+  {
+    if(IsValidClient(i))
+    {
+      ResetClientStatus(i);
+      
+      if(!IsFakeClient(i))  KillBGMTimer(i);
+    }
   }
 }
 
