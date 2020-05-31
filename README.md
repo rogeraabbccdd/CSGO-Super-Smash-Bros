@@ -52,6 +52,14 @@ Check [include file](https://github.com/rogeraabbccdd/CSGO-Super-Smash-Bros/blob
 - Fix item spawn timer.
 - Add hitgroup multiplier cvars.
 
+### 0.7
+- Add weapons settings, data saved in clientprefs by map.
+- Fix kill event weapon.
+- Add blow away sounds.
+- Add cheer sounds when player killed.
+- Add item spawned message.
+- Fix wrong player damage when take control of bot.
+
 ## Video Preview
 <a href="https://www.youtube.com/watch?v=3M2km3ePzAY" target="_blank">
   <img height="300" src="https://i.ytimg.com/vi/3M2km3ePzAY/maxresdefault.jpg">
