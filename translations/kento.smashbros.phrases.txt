@@ -48,8 +48,8 @@
 	"Volume 1"
 	{
 		"#format"		""
-		"en"			"{GREEN}[MVP] {NORMAL}Volume values must be {RED}0.0- 1.0"
-		"zho"			"{GREEN}[MVP] {NORMAL}音量大小限制為 {RED}0.0 - 1.0"
+		"en"			"{GREEN}[SB] {NORMAL}Volume values must be {RED}0.0- 1.0"
+		"zho"			"{GREEN}[SB] {NORMAL}音量大小限制為 {RED}0.0 - 1.0"
 	}
 	"Volume 2"
 	{
