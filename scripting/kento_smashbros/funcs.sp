@@ -161,7 +161,7 @@ void GetWeaponClassName(int weapon, char[]name, int maxlength)
   GetEdictClassname(weapon, name, maxlength);
 
   int index = GetEntProp(weapon, Prop_Send, "m_iItemDefinitionIndex");
-  PrintToChatAll("%d", index);
+  if(DEBUG) PrintToChatAll("weapon index %d", index);
   switch (index)
   {
     case 60: strcopy(name, maxlength, "weapon_m4a1_silencer");
