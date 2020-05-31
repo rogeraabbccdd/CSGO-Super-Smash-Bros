@@ -6,12 +6,14 @@
 #include <navareautilities>
 #include <kento_csgocolors>
 #include <clientprefs>
+#include <smlib>
 
 #pragma newdecls required
 
 #define MAXHEALTHCHECK 500.0
 #define MAXITEMS 100
 #define MAXBGMS 100
+#define MAXWEAPONS 50
 #define MAXTRIGGER_HURTS 100
 
 bool DEBUG = true;
@@ -49,7 +51,7 @@ ITEMS items[MAXITEMS];
 float totalChace = 0.0;
 Handle itemTimer = INVALID_HANDLE;
 
-// BGM configs1
+// BGM configs
 enum struct BGM {
   char name[1024];
   char file[1024];
@@ -60,8 +62,26 @@ int bgmCount = 0;
 Handle hBGMTimer[MAXPLAYERS + 1] = {INVALID_HANDLE, ...};
 int currentBGM = -1;
 
+// Weapons configs
+int weaponCountPrimaryT = 0;
+int weaponCountSecondaryT = 0;
+int weaponCountPrimaryCT = 0;
+int weaponCountSecondaryCT = 0;
+char weaponPrimaryT[MAXWEAPONS][128];
+char weaponSecondaryT[MAXWEAPONS][128];
+char weaponPrimaryCT[MAXWEAPONS][128];
+char weaponSecondaryCT[MAXWEAPONS][128];
+char weaponPrimaryTPlayer[MAXPLAYERS + 1][128];
+char weaponSecondaryTPlayer[MAXPLAYERS + 1][128];
+char weaponPrimaryCTPlayer[MAXPLAYERS + 1][128];
+char weaponSecondaryCTPlayer[MAXPLAYERS + 1][128];
+
 // Cookie
 Handle clientVolCookie;
+Handle hweaponPrimaryTPlayer;
+Handle hweaponSecondaryTPlayer;
+Handle hweaponPrimaryCTPlayer;
+Handle hweaponSecondaryCTPlayer;
 float fvol[MAXPLAYERS+1];
 
 // Trigger hurts on map
@@ -73,9 +93,12 @@ Handle freezetimeTimer = INVALID_HANDLE;
 float roundtime;
 Handle hRoundCountdown = INVALID_HANDLE;
 
+// Stats
+int kills[MAXPLAYERS+1];
+int deaths[MAXPLAYERS+1];
+
 int bWarmUp = false;
 
-#include "kento_smashbros/funcs.sp"
 #include "kento_smashbros/convars.sp"
 #include "kento_smashbros/natives.sp"
 #include "kento_smashbros/config.sp"
@@ -86,13 +109,15 @@ int bWarmUp = false;
 #include "kento_smashbros/bgm.sp"
 #include "kento_smashbros/assets.sp"
 #include "kento_smashbros/menus.sp"
+#include "kento_smashbros/cookies.sp"
+#include "kento_smashbros/funcs.sp"
 
 public Plugin myinfo =
 {
   name = "[CS:GO] Super Smash Bros - Core",
   author = "Kento",
   description = "Core plugin of Super Smash Bros",
-  version = "0.6",
+  version = "0.7",
   url = "http://steamcommunity.com/id/kentomatoryoshika/"
 };
 
@@ -104,6 +129,7 @@ public void OnPluginStart()
   HookEvent("player_death", Event_PlayerDeath, EventHookMode_Pre);
   HookEvent("round_start", Event_RoundStart);
   HookEvent("round_end", Event_RoundEnd, EventHookMode_Pre);
+  HookEvent("bot_takeover", Event_BotTakeover, EventHookMode_Pre);
 
   clientVolCookie = RegClientCookie("sb_vol", "Super Smash Bros Volume", CookieAccess_Protected);
 
@@ -114,6 +140,8 @@ public void OnPluginStart()
 
   RegConsoleCmd("sm_sb", Command_SmashBros);
   RegConsoleCmd("sm_sbvol", Command_Volume);
+  RegConsoleCmd("sm_guns", Command_Weapon);
+  RegConsoleCmd("sm_weapons", Command_Weapon);
 
   if(DEBUG) {
     // Set damage to all players
@@ -195,23 +223,18 @@ public void OnMapStart () {
 
   LoadMapConfig(sMapName2);
   LoadBGMConfig(sMapName2);
+  LoadWeaponsConfig(sMapName2);
 
   LoadAssets();
 
   CreateTimer(0.1, DisplayInformation, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+
+  RegMapCookie(sMapName2);
 }
 
 public void OnClientCookiesCached(int client)
 {
-  char buffer[5];
-  GetClientCookie(client, clientVolCookie, buffer, 5);
-  if(!StrEqual(buffer, ""))
-  {
-    fvol[client] = StringToFloat(buffer);
-  }
-  if(StrEqual(buffer,"")){
-    fvol[client] = 0.8;
-  }
+  GetClientCookies(client);
 }
 
 public void OnMapEnd()
@@ -251,6 +274,9 @@ public void OnClientPostAdminCheck(int client) {
   SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
   ResetClientStatus(client);
+
+  kills[client] = 0;
+  deaths[client] = 0;
 }
 
 public void OnClientDisconnect(int client){
@@ -268,4 +294,7 @@ public void OnClientDisconnect(int client){
   }
 
   ResetClientStatus(client);
+
+  kills[client] = 0;
+  deaths[client] = 0;
 }

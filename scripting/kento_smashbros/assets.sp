@@ -7,6 +7,15 @@ void LoadAssets() {
   AddFileToDownloadsTable("sound/kento_smashbros/sfx/go.mp3");
   AddFileToDownloadsTable("sound/kento_smashbros/sfx/timeup.mp3");
   AddFileToDownloadsTable("sound/kento_smashbros/sfx/gameset.mp3");
+  AddFileToDownloadsTable("sound/kento_smashbros/sfx/blowaway_s.mp3");
+  AddFileToDownloadsTable("sound/kento_smashbros/sfx/blowaway_m.mp3");
+  AddFileToDownloadsTable("sound/kento_smashbros/sfx/blowaway_l.mp3");
+  AddFileToDownloadsTable("sound/kento_smashbros/sfx/cheer_s.mp3");
+  AddFileToDownloadsTable("sound/kento_smashbros/sfx/cheer_m.mp3");
+  AddFileToDownloadsTable("sound/kento_smashbros/sfx/cheer_l.mp3");
+  AddFileToDownloadsTable("sound/kento_smashbros/sfx/cheer_s.mp3");
+  AddFileToDownloadsTable("sound/kento_smashbros/sfx/cheer_m.mp3");
+  AddFileToDownloadsTable("sound/kento_smashbros/sfx/cheer_l.mp3");
 
   FakePrecacheSound("*/kento_smashbros/sfx/5.mp3");
   FakePrecacheSound("*/kento_smashbros/sfx/4.mp3");
@@ -16,6 +25,15 @@ void LoadAssets() {
   FakePrecacheSound("*/kento_smashbros/sfx/go.mp3");
   FakePrecacheSound("*/kento_smashbros/sfx/timeup.mp3");
   FakePrecacheSound("*/kento_smashbros/sfx/gameset.mp3");
+  FakePrecacheSound("*/kento_smashbros/sfx/cheer_s.mp3");
+  FakePrecacheSound("*/kento_smashbros/sfx/cheer_m.mp3");
+  FakePrecacheSound("*/kento_smashbros/sfx/cheer_l.mp3");
+  FakePrecacheSound("*/kento_smashbros/sfx/blowaway_s.mp3");
+  FakePrecacheSound("*/kento_smashbros/sfx/blowaway_m.mp3");
+  FakePrecacheSound("*/kento_smashbros/sfx/blowaway_l.mp3");
+  FakePrecacheSound("*/kento_smashbros/sfx/cheer_s.mp3");
+  FakePrecacheSound("*/kento_smashbros/sfx/cheer_m.mp3");
+  FakePrecacheSound("*/kento_smashbros/sfx/cheer_l.mp3");
 
   AddFileToDownloadsTable("materials/kento_smashbros/3.vmt");
   AddFileToDownloadsTable("materials/kento_smashbros/3.vtf");

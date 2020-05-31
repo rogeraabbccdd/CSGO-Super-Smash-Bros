@@ -215,3 +215,162 @@ void LoadBGMConfig(const char [] mapname)
   kv.Rewind();
   delete kv;
 }
+
+void LoadWeaponsConfig(const char [] mapname)
+{
+  char Configfile[PLATFORM_MAX_PATH];
+  BuildPath(Path_SM, Configfile, sizeof(Configfile), "configs/kento_smashbros/weapons.cfg");
+
+  if (!FileExists(Configfile))
+  {
+    SetFailState("Fatal error: Unable to open configuration file \"%s\"!", Configfile);
+  }
+
+  KeyValues kv = CreateKeyValues("configs");
+  kv.ImportFromFile(Configfile);
+
+  if(DEBUG) {
+    LogError("looking for weapon configs for map %s", mapname);
+  }
+
+  if(kv.JumpToKey(mapname))
+  {
+    if(kv.JumpToKey("primary") && kv.GotoFirstSubKey(false))
+    {
+      do
+      {
+        char name[128];
+        char team[8];
+        kv.GetSectionName(name, sizeof(name));
+        kv.GetString(NULL_STRING, team, sizeof(team));
+
+        if(StrEqual(team, "CT") || StrEqual(team, "BOTH")){
+          Format(weaponPrimaryCT[weaponCountPrimaryCT], 128, name);
+          weaponCountPrimaryCT++
+
+          if(DEBUG) {
+            LogError("primary name: %s, team: CT", name);
+          }
+        }
+        if(StrEqual(team, "T") || StrEqual(team, "BOTH")){
+          Format(weaponPrimaryT[weaponCountPrimaryT], 128, name);
+          weaponCountPrimaryT++
+
+          if(DEBUG) {
+            LogError("primary name: %s, team: T", name);
+          }
+        }
+      }
+      while (kv.GotoNextKey(false));
+
+      kv.GoBack();
+    }
+
+    kv.GoBack();
+
+    if(kv.JumpToKey("secondary") && kv.GotoFirstSubKey(false))
+    {
+      do
+      {
+        char name[128];
+        char team[8];
+        kv.GetSectionName(name, sizeof(name));
+        kv.GetString(NULL_STRING, team, sizeof(team));
+
+        if(StrEqual(team, "CT") || StrEqual(team, "BOTH")){
+          Format(weaponSecondaryCT[weaponCountSecondaryCT], 128, name);
+          weaponCountSecondaryCT++;
+
+          if(DEBUG) {
+            LogError("Secondary name: %s, team: CT", name);
+          }
+        }
+        if(StrEqual(team, "T") || StrEqual(team, "BOTH")){
+          Format(weaponSecondaryT[weaponCountSecondaryT], 128, name);
+          weaponCountSecondaryT++;
+
+          if(DEBUG) {
+            LogError("Secondary name: %s, team: T", name);
+          }
+        }
+      }
+      while (kv.GotoNextKey(false));
+      kv.GoBack();
+    }
+  }
+  else {
+    kv.Rewind();
+
+    if(DEBUG) {
+      LogError("No map weapon config found, use default", mapname);
+    }
+
+    if(kv.JumpToKey("default")) {
+      if(kv.JumpToKey("primary") && kv.GotoFirstSubKey(false))
+      {
+        do
+        {
+          char name[128];
+          char team[8];
+          kv.GetSectionName(name, sizeof(name));
+          kv.GetString(NULL_STRING, team, sizeof(team));
+
+          if(StrEqual(team, "CT") || StrEqual(team, "BOTH")){
+            Format(weaponPrimaryCT[weaponCountPrimaryCT], 128, name);
+            weaponCountPrimaryCT++
+
+            if(DEBUG) {
+              LogError("primary name: %s, team: CT", name);
+            }
+          }
+          if(StrEqual(team, "T") || StrEqual(team, "BOTH")){
+            Format(weaponPrimaryT[weaponCountPrimaryT], 128, name);
+            weaponCountPrimaryT++
+
+            if(DEBUG) {
+              LogError("primary name: %s, team: T", name);
+            }
+          }
+        }
+        while (kv.GotoNextKey(false));
+
+        kv.GoBack();
+      }
+
+      kv.GoBack();
+
+      if(kv.JumpToKey("secondary") && kv.GotoFirstSubKey(false))
+      {
+        do
+        {
+          char name[128];
+          char team[8];
+          kv.GetSectionName(name, sizeof(name));
+          kv.GetString(NULL_STRING, team, sizeof(team));
+
+          if(StrEqual(team, "CT") || StrEqual(team, "BOTH")){
+            Format(weaponSecondaryCT[weaponCountSecondaryCT], 128, name);
+            weaponCountSecondaryCT++;
+
+            if(DEBUG) {
+              LogError("Secondary name: %s, team: CT", name);
+            }
+          }
+          if(StrEqual(team, "T") || StrEqual(team, "BOTH")){
+            Format(weaponSecondaryT[weaponCountSecondaryT], 128, name);
+            weaponCountSecondaryT++;
+
+            if(DEBUG) {
+              LogError("Secondary name: %s, team: T", name);
+            }
+          }
+        }
+        while (kv.GotoNextKey(false));
+        kv.GoBack();
+      }
+    }
+    else {
+      LogError("Error: Unable to find weapon settings in configuration file \"%s\"!", Configfile);
+    }
+  }
+}

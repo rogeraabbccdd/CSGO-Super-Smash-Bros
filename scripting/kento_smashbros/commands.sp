@@ -68,3 +68,9 @@ public Action Command_MyDamage(int client, int args)
   PrintToChat(client, "fClientTakeDMGMultiplier %f", fClientTakeDMGMultiplier[client]);
   PrintToChat(client, "fClientPushBackMultiplier %f", fClientPushBackMultiplier[client]);
 }
+
+public Action Command_Weapon(int client, int args)
+{
+  if(!IsValidClient(client)) return;
+  ShowWeaponMenu(client);
+}

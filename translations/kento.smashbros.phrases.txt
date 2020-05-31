@@ -27,6 +27,12 @@
 		"en"			"Volume Settings"
 		"zho"			"音量設定"
 	}
+	"Main Menu Weapon"
+	{
+		"#format"		""
+		"en"			"Weapon Settings"
+		"zho"			"武器設定"
+	}
 	"Volume Menu Title"
 	{
 		"#format"		"{1:s}"
@@ -48,7 +54,91 @@
 	"Volume 2"
 	{
 		"#format"		"{1:.2f}"
-		"en"			"{GREEN}[MVP] {NORMAL}Volume is set to {PINK}{1}"
-		"zho"			"{GREEN}[MVP] {NORMAL}音量設定為 {PINK}{1}"
+		"en"			"{GREEN}[SB] {NORMAL}Volume is set to {PINK}{1}"
+		"zho"			"{GREEN}[SB] {NORMAL}音量設定為 {PINK}{1}"
+	}
+	"Weapon Menu Title"
+	{
+		"#format"		""
+		"en"			"Weapon Settings"
+		"zho"			"武器設定"
+	}
+	"Weapon Menu T Primary"
+	{
+		"#format"		""
+		"en"			"Terrorist Primary Weapon"
+		"zho"			"恐怖分子主武器"
+	}
+	"Weapon Menu T Secondary"
+	{
+		"#format"		""
+		"en"			"Terrorist Secondary Settings"
+		"zho"			"恐怖分子副武器"
+	}
+	"Weapon Menu CT Primary"
+	{
+		"#format"		""
+		"en"			"Counter-Terrorists Primary Weapon"
+		"zho"			"反恐小組主武器"
+	}
+	"Weapon Menu CT Secondary"
+	{
+		"#format"		""
+		"en"			"Counter-Terrorists Secondary Settings"
+		"zho"			"反恐小組副武器"
+	}
+	"T Primary Menu Title"
+	{
+		"#format"		""
+		"en"			"Select your Terrorist primary weapon"
+		"zho"			"選擇恐怖分子主武器"
+	}
+	"T Secondary Menu Title"
+	{
+		"#format"		""
+		"en"			"Select your Terrorist decondary weapon"
+		"zho"			"選擇恐怖分子副武器"
+	}
+	"CT Primary Menu Title"
+	{
+		"#format"		""
+		"en"			"Select your Counter-Terrorists primary weapon"
+		"zho"			"選擇恐怖分子主武器"
+	}
+	"CT Secondary Menu Title"
+	{
+		"#format"		""
+		"en"			"Select your Counter-Terrorists decondary weapon"
+		"zho"			"選擇恐怖分子副武器"
+	}
+	"T Primary Set"
+	{
+		"#format"		"{1:s}"
+		"en"			"{GREEN}[SB] {ORANGE}Terrorist {NORMAL}primary weapon set to {PINK}{1}"
+		"zho"			"{GREEN}[SB] {ORANGE}恐怖分子 {NORMAL}主武器設定為 {PINK}{1}"
+	}
+	"T Secondary Set"
+	{
+		"#format"		"{1:s}"
+		"en"			"{GREEN}[SB] {ORANGE}Terrorist {NORMAL}secondary weapon set to {PINK}{1}"
+		"zho"			"{GREEN}[SB] {ORANGE}恐怖分子 {NORMAL}副武器設定為 {PINK}{1}"
+	}
+	"CT Primary Set"
+	{
+		"#format"		"{1:s}"
+		"en"			"{GREEN}[SB] {BLUE}Counter-Terrorists {NORMAL}primary weapon set to {PINK}{1}"
+		"zho"			"{GREEN}[SB] {BLUE}反恐小組 {NORMAL}主武器設定為 {PINK}{1}"
+	}
+	"CT Secondary Set"
+	{
+		"#format"		"{1:s}"
+		"en"			"{GREEN}[SB] {BLUE}Counter-Terrorists {NORMAL}secondary weapon set to {PINK}{1}"
+		"zho"			"{GREEN}[SB] {BLUE}反恐小組 {NORMAL}副武器設定為 {PINK}{1}"
+	}
+	"Item Spawned"
+	{
+		"#format"		""
+		"en"			"New items spawned on map!"
+		"zho"			"有新的道具出現在地圖上了!"
 	}
 }	

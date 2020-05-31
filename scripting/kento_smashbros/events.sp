@@ -2,35 +2,89 @@ public Action Event_PlayerSpawn (Event event, const char[] name, bool dontBroadc
 {
   int client = GetClientOfUserId(event.GetInt("userid"));
   
-  if(IsValidClient(client)) {
-    fPlayerDMG[client] = 0.0;
-  }
+  ResetClientStatus(client);
+
+  fPlayerDMG[client] = 0.0;
+
+  CreateTimer(0.1, GiveWeapons, client);
 }
 
-public Action PrintDmg (Handle timer, int client) {
-  if(IsValidClient(client) && !IsFakeClient(client)) PrintHintText(client, "%f %", fPlayerDMG[client]);
+public Action GiveWeapons(Handle timer, int client)
+{
+  if(IsValidClient(client))
+  {
+    Client_RemoveAllWeapons(client, "weapon_knife", true);
+  
+    int team = GetClientTeam(client);
+    if(team == CS_TEAM_T)
+    {
+      GivePlayerItem(client, weaponPrimaryTPlayer[client]);
+      GivePlayerItem(client, weaponSecondaryTPlayer[client]);
+    }
+    else if(team == CS_TEAM_CT)
+    {
+      GivePlayerItem(client, weaponPrimaryCTPlayer[client]);
+      GivePlayerItem(client, weaponSecondaryCTPlayer[client]);
+    }
+  }
 }
 
 public Action Event_PlayerDeath (Event event, const char[] name, bool dontBroadcast)
 {
   int client = GetClientOfUserId(event.GetInt("userid"));
 
+  bool changed = false;
+
   if(IsValidClient(lastAttackBy[client].attacker)) {
-    event.SetInt("attacker", GetClientUserId(lastAttackBy[client].attacker));
-    event.SetString("weapon", lastAttackBy[client].weapon);
+    int attacker = lastAttackBy[client].attacker;
+    changed = true;
+    Event event_fake = CreateEvent("player_death", true);
+    event_fake.SetInt("attacker", GetClientUserId(attacker));
+    event_fake.SetInt("userid", event.GetInt("userid"));
+    event_fake.SetString("weapon", lastAttackBy[client].weapon);
+
+    for(int i = 0; i < MaxClients; i++)
+    {
+      if(IsValidClient(i) && !IsFakeClient(i)) event_fake.FireToClient(i);
+    }
+    
+    event_fake.Cancel();
+
+    kills[attacker]++;
+    SetClientFrags(attacker, kills[attacker]);
   }
+
+  deaths[client]++;
+  SetClientDeaths(client, deaths[client]);
+  SetClientFrags(client, kills[client]);
 
   lastAttackBy[client].attacker = 0;
   Format(lastAttackBy[client].weapon, 64, "");
 
+  char path[300];
+  if(fPlayerDMG[client] >= 200.0) Format(path, sizeof(path), "*/kento_smashbros/sfx/cheer_l.mp3");
+  else if(fPlayerDMG[client] >= 100.0)  Format(path, sizeof(path), "*/kento_smashbros/sfx/cheer_m.mp3");
+  else if(fPlayerDMG[client] >= 0.0)  Format(path, sizeof(path), "*/kento_smashbros/sfx/cheer_s.mp3");
+
   for (int i = 1; i <= MaxClients; i++)
   {
     if(lastAttack[i] == client) lastAttack[i] = 0;
+
+    if(IsValidClient(i) && !IsFakeClient(i))
+    {
+      EmitSoundToClient(i, path, SOUND_FROM_PLAYER, SNDCHAN_STATIC, SNDLEVEL_NONE, _, fvol[i]);
+    }
   }
 
   ResetClientStatus(client);
 
-  return Plugin_Continue;
+  fPlayerDMG[client] = 0.0;
+
+  if(changed) {
+    event.BroadcastDisabled = true;
+    return Plugin_Changed;
+  }
+  else return Plugin_Continue;
 }
 
 public Action Event_RoundStart (Event event, const char[] name, bool dontBroadcast)
@@ -163,6 +217,13 @@ public Action RoundCountdown(Handle tmr)
       hRoundCountdown = INVALID_HANDLE;
     }
   }
+}
+
+public Action Event_BotTakeover(Event event, const char[] name, bool dontBroadcast)
+{
+  int client = GetClientOfUserId(event.GetInt("userid"));
+  int bot = GetClientOfUserId(event.GetInt("botid"));
+  fPlayerDMG[client] = fPlayerDMG[bot];
 }
 
 public void OnGameFrame()

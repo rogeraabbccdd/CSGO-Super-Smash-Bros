@@ -56,18 +56,10 @@ void SpawnItems() {
         Call_Finish();
       }
     }
-  }
-}
 
-int GetItemByChance (float chance) {
-  int idx = -1;
-  float totalChance = 0.0;
-  for(int i=0;i<itemCount;i++) {
-    totalChance += items[i].chance;
-    if(chance <= totalChance) {
-      idx = i;
-      break;
+    for (int i = 1; i <= MaxClients; i++)
+    {
+      if(IsValidClient(i) && !IsFakeClient(i))  PrintHintText(i, "%T", "Item Spawned", i);
     }
   }
-  return idx;
 }

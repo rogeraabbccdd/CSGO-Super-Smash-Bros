@@ -110,8 +110,9 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
 
     int weapon = GetEntPropEnt(attacker, Prop_Send, "m_hActiveWeapon");
     char weaponName[64];
-    GetEdictClassname(weapon, weaponName, sizeof(weaponName));
-
+    GetWeaponClassName(weapon, weaponName, sizeof(weaponName));
+    if(DEBUG) PrintToChat(attacker, "weaponname %s", weaponName);
+    
     if(weapon > 0 && IsValidEdict(weapon))
     {
       Format(lastAttackBy[victim].weapon, 64, "%s", weaponName);
@@ -160,28 +161,22 @@ void KnockBack(int victim, int attacker = -1) {
     vReturn[2] = Sine(DegToRad(vAngles[0])) * totaldamage * fClientUpwardForce[victim];
   }
 
-  TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, vReturn);
-}
+  if (GetEntityFlags(victim) & FL_ONGROUND)
+  {
+    char path[300];
 
-bool IsMapTriggerHurt(int entity) {
-  bool result = false;
-  for(int i=0;i<TriggerCount;i++) {
-    if(entity == TriggerHurts[i]) {
-      result = true;
-      break;
+    if(fPlayerDMG[victim] >= 300.0) Format(path, sizeof(path), "*/kento_smashbros/sfx/blowaway_l.mp3");
+    else if(fPlayerDMG[victim] >= 200.0)  Format(path, sizeof(path), "*/kento_smashbros/sfx/blowaway_m.mp3");
+    else if(fPlayerDMG[victim] >= 100.0)  Format(path, sizeof(path), "*/kento_smashbros/sfx/blowaway_s.mp3");
+
+    for (int i = 1; i <= MaxClients; i++)
+    {
+      if(IsValidClient(i) && !IsFakeClient(i))
+      {
+        EmitSoundToClient(i, path, victim, SNDCHAN_STATIC, SNDLEVEL_NONE, _, fvol[i]);
+      }
     }
   }
-  return result;
-}
 
-void ResetClientStatus(int client) {
-  fClientUpwardForce[client] = fCvarUpwardForce;
-  fClientAngles[client] = fCvarAngles;
-  fClientGiveDMGMultiplier[client] = fCvarGiveDMGMultiplier;
-  fClientTakeDMGMultiplier[client] = fCvarTakeDMGMultiplier;
-  fClientPushBackMultiplier[client] = fCvarPushBackMultiplier;
-  
-  lastAttackBy[client].attacker = -1;
-  Format(lastAttackBy[client].weapon, 64, "");
-  lastAttack[client] = -1;
+  TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, vReturn);
 }
