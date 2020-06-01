@@ -60,6 +60,12 @@ Check [include file](https://github.com/rogeraabbccdd/CSGO-Super-Smash-Bros/blob
 - Add item spawned message.
 - Fix wrong player damage when take control of bot.
 
+### 0.8
+- Add native SB_KnockBackClient.
+- Add forward SB_OnClientKnockBack.
+- Fix return data types of some natives.
+- Try to fix invalid handle error.
+
 ## Video Preview
 <a href="https://www.youtube.com/watch?v=3M2km3ePzAY" target="_blank">
   <img height="300" src="https://i.ytimg.com/vi/3M2km3ePzAY/maxresdefault.jpg">
