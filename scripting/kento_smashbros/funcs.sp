@@ -36,12 +36,7 @@ void ResetTimers()
 
   for (int i = 1; i <= MaxClients; i++)
   {
-    if(IsValidClient(i))
-    {
-      ResetClientStatus(i);
-      
-      if(!IsFakeClient(i))  KillBGMTimer(i);
-    }
+    KillBGMTimer(i);
   }
 
   if(hRoundCountdown != INVALID_HANDLE)

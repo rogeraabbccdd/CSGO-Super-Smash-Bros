@@ -15,8 +15,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
   CreateNative("SB_SetClientUpwardForce", Native_SetClientUpwardForce);
   CreateNative("SB_SetClientAngle", Native_SetClientAngle);
 
+  CreateNative("SB_KnockBackClient", Native_KnockBackClient);
+
   OnItemSpawn = CreateGlobalForward("SB_OnItemSpawn", ET_Ignore, Param_String, Param_Array);
   OnSBTakeDamage = CreateGlobalForward("SB_OnTakeDamage", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Float);
+  OnClientKnockBack = CreateGlobalForward("SB_OnClientKnockBack", ET_Ignore, Param_Cell, Param_Cell, Param_Array);
 
   RegPluginLibrary("kento_smashbros");
 }
@@ -121,4 +124,15 @@ public int Native_SetClientAngle(Handle plugin, int numParams)
     return true;
   }
   else return false;
+}
+
+public int Native_KnockBackClient(Handle plugin, int numParams)
+{
+  int client = GetNativeCell(1);
+  int attacker = GetNativeCell(2);
+
+  if(!IsValidClient(client) || !IsValidEdict(attacker))  return false;
+
+  KnockBack(client, attacker);
+  return true;
 }

@@ -179,4 +179,10 @@ void KnockBack(int victim, int attacker = -1) {
   }
 
   TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, vReturn);
+
+  Call_StartForward(OnClientKnockBack);
+  Call_PushCell(victim);
+  Call_PushCell(attacker);
+  Call_PushArray(vReturn, sizeof(vReturn));
+  Call_Finish();
 }

@@ -104,8 +104,8 @@ public Action Event_RoundStart (Event event, const char[] name, bool dontBroadca
   {
     if(IsValidClient(i))
     {
-      SetClientOverlay(i, "");
       ResetClientStatus(i);
+      if(!IsFakeClient(i))  SetClientOverlay(i, "");
     }
   }
 
@@ -177,10 +177,14 @@ public Action Event_RoundEnd (Event event, const char[] name, bool dontBroadcast
 
   for (int i = 1; i <= MaxClients; i++)
   {
-    if(IsValidClient(i) && !IsFakeClient(i))
+    if(IsValidClient(i))
     {
-      SetClientOverlay(i, overlay);
-      EmitSoundToClient(i, snd, SOUND_FROM_PLAYER, SNDCHAN_STATIC, SNDLEVEL_NONE, _, fvol[i]);
+      ResetClientStatus(i);
+      if(!IsFakeClient(i))
+      {
+        SetClientOverlay(i, overlay);
+        EmitSoundToClient(i, snd, SOUND_FROM_PLAYER, SNDCHAN_STATIC, SNDLEVEL_NONE, _, fvol[i]);
+      }
     }
   }
 
