@@ -1,5 +1,3 @@
-# THIS GAMEMODE IS NOT FINISHED YET.
-
 # CSGO Super Smash Bros
 Super Smash Bros gamemode for CSGO.
 
@@ -66,7 +64,14 @@ Check [include file](https://github.com/rogeraabbccdd/CSGO-Super-Smash-Bros/blob
 - Fix return data types of some natives.
 - Try to fix invalid handle error.
 
+### 1.0
+- Add freezetime countdown overlay.
+- Add round countdown overlay.
+- Add spawn item command for admins.
+- Fix timer handle error.
+- sm_dmg is open with debug mode off for admins. 
+
 ## Video Preview
-<a href="https://www.youtube.com/watch?v=3M2km3ePzAY" target="_blank">
-  <img height="300" src="https://i.ytimg.com/vi/3M2km3ePzAY/maxresdefault.jpg">
+<a href="https://www.youtube.com/watch?v=FLj4FEwV6pE" target="_blank">
+  <img height="300" src="https://i.ytimg.com/vi/FLj4FEwV6pE/maxresdefault.jpg">
 </a>
