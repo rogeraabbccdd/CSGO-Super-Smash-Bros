@@ -141,4 +141,10 @@
 		"en"			"New items spawned on map!"
 		"zho"			"有新的道具出現在地圖上了!"
 	}
+	"Spawn Item Args"
+	{
+		"#format"		""
+		"en"			"{GREEN}[SB] {NORMAL} Please use {PINK} sm_item <itemname> <count>"
+		"zho"			"{GREEN}[SB] {NORMAL} 請使用 {PINK} sm_item <道具名稱> <數量>"
+	}
 }	

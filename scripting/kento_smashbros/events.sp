@@ -91,9 +91,9 @@ public Action Event_RoundStart (Event event, const char[] name, bool dontBroadca
 {
   ResetTimers();
   
-  if(spawnroundstart) SpawnItems();
+  if(spawnroundstart && spawnitems > 0) SpawnItems();
   
-  if(spawninterval > 0.0) {
+  if(spawninterval > 0.0 && spawnitems > 0) {
     KillItemTimer();
     StartRoundItemTimer();
   }
@@ -132,7 +132,8 @@ public Action Countdown(Handle timer)
     else if(freezetime > -1) Format(snd, sizeof(snd), "*/kento_smashbros/sfx/go.mp3", freezetime);
     
     char overlay[64];
-    if(freezetime > -1)  Format(overlay, sizeof(overlay), "kento_smashbros/%d", freezetime);
+    if(freezetime > 0)  Format(overlay, sizeof(overlay), "kento_smashbros/freeze_%d", freezetime);
+    else if(freezetime == 0)  Format(overlay, sizeof(overlay), "kento_smashbros/go", freezetime);
     else if(freezetime == -1)  Format(overlay, sizeof(overlay), "", freezetime);
 
     for (int i = 1; i <= MaxClients; i++)
@@ -201,13 +202,18 @@ public Action RoundCountdown(Handle tmr)
 
   if (roundtime <= 5.0 && roundtime > 0.0)
   {
+    int itime = RoundToFloor(roundtime);
     char snd[64];
-    Format(snd, sizeof(snd), "*/kento_smashbros/sfx/%d.mp3", RoundToFloor(roundtime));
+    Format(snd, sizeof(snd), "*/kento_smashbros/sfx/%d.mp3", itime);
+    
+    char overlay[64];
+    Format(overlay, sizeof(overlay), "kento_smashbros/time_%d", itime);
 
     for (int i = 1; i <= MaxClients; i++)
     {
       if (IsValidClient(i) && !IsFakeClient(i)) 
       {
+        SetClientOverlay(i, overlay);
         EmitSoundToClient(i, snd, SOUND_FROM_PLAYER, SNDCHAN_STATIC, SNDLEVEL_NONE, _, fvol[i]);
       }
     }

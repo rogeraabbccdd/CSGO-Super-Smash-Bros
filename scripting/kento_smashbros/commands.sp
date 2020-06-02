@@ -74,3 +74,24 @@ public Action Command_Weapon(int client, int args)
   if(!IsValidClient(client)) return;
   ShowWeaponMenu(client);
 }
+
+public Action Command_SpawnItem(int client, int args)
+{
+  if (args < 2)
+  {
+    CPrintToChat(client, "%T", "Spawn Item Args", client);
+    return Plugin_Handled;
+  }
+
+  char itemname[20];
+  char count[20];
+  int icount;
+
+  GetCmdArg(1, itemname, sizeof(itemname));
+  GetCmdArg(2, count, sizeof(count));
+  icount = StringToInt(count);
+
+  SpawnItem(itemname, icount);
+
+  return Plugin_Handled;
+}

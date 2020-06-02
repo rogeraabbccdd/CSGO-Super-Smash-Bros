@@ -21,6 +21,7 @@ bool DEBUG = true;
 // Natives
 Handle OnItemSpawn;
 Handle OnSBTakeDamage;
+Handle OnClientKnockBack;
 
 // Last attacker info for rewrite player death event
 enum struct LAST_ATTACK {
@@ -117,7 +118,7 @@ public Plugin myinfo =
   name = "[CS:GO] Super Smash Bros - Core",
   author = "Kento",
   description = "Core plugin of Super Smash Bros",
-  version = "0.7",
+  version = "1.0",
   url = "http://steamcommunity.com/id/kentomatoryoshika/"
 };
 
@@ -143,9 +144,12 @@ public void OnPluginStart()
   RegConsoleCmd("sm_guns", Command_Weapon);
   RegConsoleCmd("sm_weapons", Command_Weapon);
 
+  // Set damage to all players
+  RegAdminCmd("sm_dmg", Command_Damage, ADMFLAG_GENERIC);
+  // Set damage to all players
+  RegAdminCmd("sm_item", Command_SpawnItem, ADMFLAG_GENERIC);
+
   if(DEBUG) {
-    // Set damage to all players
-    RegConsoleCmd("sm_dmg", Command_Damage);
     // Show all players' damage
     RegConsoleCmd("sm_alldmg", Command_AllDamage);
     // Show my status
@@ -232,30 +236,18 @@ public void OnMapStart () {
   RegMapCookie(sMapName2);
 }
 
+public void OnMapEnd () {
+  itemTimer = INVALID_HANDLE;
+  freezetimeTimer = INVALID_HANDLE;
+  hRoundCountdown = INVALID_HANDLE;
+  for(int i=0;i<MaxClients;i++){
+    hBGMTimer[i] = INVALID_HANDLE;
+  }
+}
+
 public void OnClientCookiesCached(int client)
 {
   GetClientCookies(client);
-}
-
-public void OnMapEnd()
-{
-  KillItemTimer();
-  
-  if(freezetimeTimer != INVALID_HANDLE)
-  {
-    KillTimer(freezetimeTimer);
-    freezetimeTimer = INVALID_HANDLE;
-  }
-
-  for (int i = 1; i <= MaxClients; i++)
-  {
-    if(IsValidClient(i))
-    {
-      ResetClientStatus(i);
-      
-      if(!IsFakeClient(i))  KillBGMTimer(i);
-    }
-  }
 }
 
 public void OnClientPutInServer(int client)
@@ -283,11 +275,6 @@ public void OnClientDisconnect(int client){
   SDKUnhook(client, SDKHook_TraceAttack, TraceAttack);
   SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
-  if(IsFakeClient(client)) return;
-
-  StopBGM(client, currentBGM);
-  KillBGMTimer(client);
-
   for (int i = 1; i <= MaxClients; i++)
   {
     if(lastAttack[i] == client) lastAttack[i] = 0;
@@ -297,4 +284,9 @@ public void OnClientDisconnect(int client){
 
   kills[client] = 0;
   deaths[client] = 0;
+
+  if(IsFakeClient(client)) return;
+
+  StopBGM(client, currentBGM);
+  KillBGMTimer(client);
 }
