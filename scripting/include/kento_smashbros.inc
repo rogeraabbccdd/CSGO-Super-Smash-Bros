@@ -114,6 +114,13 @@ native bool SB_SetClientAngle(int client, float angle);
 native bool SB_KnockBackClient(int client, int attacker);
 
 /**
+ * Is friendly fire on?
+ *
+ * @return	true if on, otherwise off.
+ */
+native bool SB_IsFriendlyFire();
+
+/**
  * When item should spawn.
  *
  * @param name     Item name.

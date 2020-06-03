@@ -17,6 +17,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
   CreateNative("SB_KnockBackClient", Native_KnockBackClient);
 
+  CreateNative("SB_IsFriendlyFire", Native_IsFriendlyFire);
+
   OnItemSpawn = CreateGlobalForward("SB_OnItemSpawn", ET_Ignore, Param_String, Param_Array);
   OnSBTakeDamage = CreateGlobalForward("SB_OnTakeDamage", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Float);
   OnClientKnockBack = CreateGlobalForward("SB_OnClientKnockBack", ET_Ignore, Param_Cell, Param_Cell, Param_Array);
@@ -135,4 +137,9 @@ public int Native_KnockBackClient(Handle plugin, int numParams)
 
   KnockBack(client, attacker);
   return true;
+}
+
+public int Native_IsFriendlyFire(Handle plugin, int numParams)
+{
+  return bCvarff;
 }
