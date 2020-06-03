@@ -190,8 +190,6 @@ public Action Event_RoundEnd (Event event, const char[] name, bool dontBroadcast
   }
 
   event.BroadcastDisabled = true; 
-  
-  ResetTimers();
 
   return Plugin_Changed;
 }
