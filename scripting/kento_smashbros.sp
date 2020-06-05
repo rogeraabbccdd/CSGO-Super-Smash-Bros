@@ -285,8 +285,6 @@ public void OnClientDisconnect(int client){
   kills[client] = 0;
   deaths[client] = 0;
 
-  if(IsFakeClient(client)) return;
-
   StopBGM(client, currentBGM);
   KillBGMTimer(client);
 }

@@ -166,6 +166,6 @@ public void RestartHandler(Handle convar, const char[] oldValue, const char[] ne
 {
 	if (convar == mp_restartgame)
 	{
-    // ResetTimers();
+    ResetTimers();
 	}
 }

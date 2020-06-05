@@ -90,15 +90,13 @@ public Action Event_PlayerDeath (Event event, const char[] name, bool dontBroadc
 public Action Event_RoundStart (Event event, const char[] name, bool dontBroadcast)
 {
   ResetTimers();
-  
-  if(spawnroundstart && spawnitems > 0) SpawnItems();
-  
+
   if(spawninterval > 0.0 && spawnitems > 0) {
-    KillItemTimer();
     StartRoundItemTimer();
   }
-
   StartRoundBGM();
+  
+  if(spawnroundstart && spawnitems > 0) SpawnItems();
 
   for (int i = 1; i <= MaxClients; i++)
   {

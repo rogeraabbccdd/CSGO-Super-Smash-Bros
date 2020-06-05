@@ -26,7 +26,11 @@ bool SetClientOverlay(int client, char[] strOverlay)
 
 void ResetTimers()
 {
-  KillItemTimer();
+  if(itemTimer != INVALID_HANDLE)
+  {
+    KillTimer(itemTimer);
+    itemTimer = INVALID_HANDLE;
+  }
   
   if(freezetimeTimer != INVALID_HANDLE)
   {
