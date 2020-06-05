@@ -151,7 +151,7 @@ bool IsMapHasWeapon (int team, int type, char[] weapon)
     }
   }
 
-  LogError("team: %d, type: %d, name: %s, result: %d", team, type, weapon, result);
+  if(DEBUG)  LogError("team: %d, type: %d, name: %s, result: %d", team, type, weapon, result);
   return result;
 }
 
