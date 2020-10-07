@@ -1,7 +1,6 @@
 void StopBGM(int client, int id)
 {
   if(id > -1){
-  
     char path[300];
     Format(path, sizeof(path), "*/%s", bgm[id].file);
     StopSound(client, SNDCHAN_STATIC, path);
@@ -37,6 +36,6 @@ public Action BGMTimer(Handle tmr, any client)
     Format(path, sizeof(path), "*/%s", bgm[currentBGM].file);
     CPrintToChat(client, "%T", "BGM", client, bgm[currentBGM].name);
     EmitSoundToClient(client, path, SOUND_FROM_PLAYER, SNDCHAN_STATIC, SNDLEVEL_NONE, _, fvol[client]);
-    if(IsValidClient(client) && !IsFakeClient(client))  hBGMTimer[client] = CreateTimer(bgm[currentBGM].length, BGMTimer, client);
+    hBGMTimer[client] = CreateTimer(bgm[currentBGM].length, BGMTimer, client);
   }
 }
