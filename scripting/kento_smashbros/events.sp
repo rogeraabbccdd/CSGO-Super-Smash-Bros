@@ -94,7 +94,6 @@ public Action Event_RoundStart (Event event, const char[] name, bool dontBroadca
   if(spawninterval > 0.0 && spawnitems > 0) {
     StartRoundItemTimer();
   }
-  StartRoundBGM();
   
   if(spawnroundstart && spawnitems > 0) SpawnItems();
 
@@ -107,7 +106,7 @@ public Action Event_RoundStart (Event event, const char[] name, bool dontBroadca
     }
   }
 
-  CreateTimer(0.0001, startTimerDelay);
+  CreateTimer(0.1, startTimerDelay);
 }
 
 public Action startTimerDelay(Handle timer)
@@ -118,6 +117,8 @@ public Action startTimerDelay(Handle timer)
     roundtime = fmp_roundtime * 60.0 + fCvarFreezetime;
     hRoundCountdown = CreateTimer(1.0, RoundCountdown, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
   }
+
+  StartRoundBGM();
 }
 
 public Action Countdown(Handle timer)
