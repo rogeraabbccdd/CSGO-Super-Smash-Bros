@@ -16,7 +16,7 @@
 #define MAXWEAPONS 50
 #define MAXTRIGGER_HURTS 100
 
-bool DEBUG = true;
+bool DEBUG = false;
 
 // Natives
 Handle OnItemSpawn;
@@ -118,7 +118,7 @@ public Plugin myinfo =
   name = "[CS:GO] Super Smash Bros - Core",
   author = "Kento",
   description = "Core plugin of Super Smash Bros",
-  version = "1.2",
+  version = "1.3",
   url = "http://steamcommunity.com/id/kentomatoryoshika/"
 };
 
