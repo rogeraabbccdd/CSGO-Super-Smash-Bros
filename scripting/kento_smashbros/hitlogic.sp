@@ -161,13 +161,13 @@ void KnockBack(int victim, int attacker = -1) {
     vReturn[2] = Sine(DegToRad(vAngles[0])) * totaldamage * fClientUpwardForce[victim];
   }
 
-  if (GetEntityFlags(victim) & FL_ONGROUND)
+  if (GetEntityFlags(victim) & FL_ONGROUND && fPlayerDMG[victim] >= 100.0)
   {
     char path[300];
+    Format(path, sizeof(path), "*/kento_smashbros/sfx/blowaway_s.mp3");
 
     if(fPlayerDMG[victim] >= 300.0) Format(path, sizeof(path), "*/kento_smashbros/sfx/blowaway_l.mp3");
     else if(fPlayerDMG[victim] >= 200.0)  Format(path, sizeof(path), "*/kento_smashbros/sfx/blowaway_m.mp3");
-    else if(fPlayerDMG[victim] >= 100.0)  Format(path, sizeof(path), "*/kento_smashbros/sfx/blowaway_s.mp3");
 
     for (int i = 1; i <= MaxClients; i++)
     {
