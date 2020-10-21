@@ -142,7 +142,7 @@ public void OnPluginStart()
   YourDamageMessage = CreateHudSynchronizer();
 
   RegConsoleCmd("sm_sb", Command_SmashBros);
-  RegConsoleCmd("sm_sbvol", Command_Volume);
+  RegConsoleCmd("sm_vol", Command_Volume);
   RegConsoleCmd("sm_guns", Command_Weapon);
   RegConsoleCmd("sm_weapons", Command_Weapon);
 
