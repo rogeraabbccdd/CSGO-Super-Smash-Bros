@@ -124,6 +124,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+  isNAUReady = LibraryExists("navareautilities");
+
   CreateConVars();
 
   HookEvent("player_spawn", Event_PlayerSpawn);
@@ -154,6 +156,27 @@ public void OnPluginStart()
     RegConsoleCmd("sm_alldmg", Command_AllDamage);
     // Show my status
     RegConsoleCmd("sm_mydmg", Command_MyDamage);
+  }
+}
+
+public void OnLibraryAdded(const char [] name)
+{
+  if (StrEqual(name, "navareautilities"))
+  {
+    isNAUReady = true;
+  }
+}
+
+public void OnAllPluginsLoaded()
+{
+  isNAUReady = LibraryExists("navareautilities");
+}
+
+public void OnLibraryRemoved(const char [] name)
+{
+  if (StrEqual(name, "navareautilities"))
+  {
+    isNAUReady = false;
   }
 }
 
