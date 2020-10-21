@@ -24,6 +24,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
   OnClientKnockBack = CreateGlobalForward("SB_OnClientKnockBack", ET_Ignore, Param_Cell, Param_Cell, Param_Array);
 
   RegPluginLibrary("kento_smashbros");
+
+  return APLRes_Success;
 }
 
 public int Native_GetClientDamage(Handle plugin, int numParams)
