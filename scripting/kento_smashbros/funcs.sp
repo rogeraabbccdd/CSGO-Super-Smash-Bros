@@ -40,7 +40,7 @@ void ResetTimers()
 
   for (int i = 1; i <= MaxClients; i++)
   {
-    KillBGMTimer(i);
+    if(IsValidClient(i) && !IsFakeClient(i)) KillBGMTimer(i);
   }
 
   if(hRoundCountdown != INVALID_HANDLE)
