@@ -231,7 +231,6 @@ public void OnMapStart () {
     if(dmg >= 100.0)  {
       TriggerHurts[TriggerCount] = iEnt;
       TriggerCount++;
-      LogError("map trigger %d", iEnt);
     }
   }
 
