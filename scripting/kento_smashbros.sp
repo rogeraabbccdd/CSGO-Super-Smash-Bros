@@ -13,7 +13,7 @@
 #define MAXHEALTHCHECK 500.0
 #define MAXITEMS 100
 #define MAXBGMS 100
-#define MAXWEAPONS 50
+#define MAXWEAPONS 100
 #define MAXTRIGGER_HURTS 100
 
 bool DEBUG = false;
