@@ -96,7 +96,7 @@
 	"T Secondary Menu Title"
 	{
 		"#format"		""
-		"en"			"Select your Terrorist decondary weapon"
+		"en"			"Select your Terrorist secondary weapon"
 		"zho"			"選擇恐怖分子副武器"
 	}
 	"CT Primary Menu Title"
@@ -108,7 +108,7 @@
 	"CT Secondary Menu Title"
 	{
 		"#format"		""
-		"en"			"Select your Counter-Terrorists decondary weapon"
+		"en"			"Select your Counter-Terrorists secondary weapon"
 		"zho"			"選擇恐怖分子副武器"
 	}
 	"T Primary Set"
