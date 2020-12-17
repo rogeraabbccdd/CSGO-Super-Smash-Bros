@@ -218,6 +218,13 @@ void LoadBGMConfig(const char [] mapname)
 
 void LoadWeaponsConfig(const char [] mapname)
 {
+  // Reset weapon count, I don't know why sourcemod not reset it after map change
+  // SM 1.10.0.6501
+  weaponCountPrimaryT = 0;
+  weaponCountSecondaryT = 0;
+  weaponCountPrimaryCT = 0;
+  weaponCountSecondaryCT = 0;
+
   char Configfile[PLATFORM_MAX_PATH];
   BuildPath(Path_SM, Configfile, sizeof(Configfile), "configs/kento_smashbros/weapons.cfg");
 
@@ -335,6 +342,11 @@ void LoadWeaponsConfig(const char [] mapname)
         while (kv.GotoNextKey(false));
 
         kv.GoBack();
+
+        if(DEBUG) {
+          LogError("CT primary count: %d", weaponCountPrimaryCT);
+          LogError("T primary count: %d", weaponCountPrimaryT);
+        }
       }
 
       kv.GoBack();
@@ -367,6 +379,11 @@ void LoadWeaponsConfig(const char [] mapname)
         }
         while (kv.GotoNextKey(false));
         kv.GoBack();
+
+        if(DEBUG) {
+          LogError("CT Secondary count: %d", weaponCountSecondaryCT);
+          LogError("T Secondary count: %d", weaponCountSecondaryT);
+        }
       }
     }
     else {
