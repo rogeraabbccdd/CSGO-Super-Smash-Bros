@@ -118,7 +118,7 @@ public Plugin myinfo =
   name = "[CS:GO] Super Smash Bros - Core",
   author = "Kento",
   description = "Core plugin of Super Smash Bros",
-  version = "1.5",
+  version = "1.6",
   url = "http://steamcommunity.com/id/kentomatoryoshika/"
 };
 
