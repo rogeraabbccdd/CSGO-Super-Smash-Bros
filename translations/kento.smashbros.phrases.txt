@@ -13,7 +13,6 @@
 		"#format"		"{1:s}"
 		"en"			"{GREEN}[SB] {NORMAL}BGM: {PINK}{1}"
 		"zho"			"{GREEN}[SB] {NORMAL}BGM: {PINK}{1}"
-		"de"			"{GREEN}[SB] {NORMAL}BGM: {PINK}{1}"
 	}
 	// Menu
 	"Main Menu Title"
@@ -21,154 +20,131 @@
 		"#format"		""
 		"en"			"Super Smash Bros Menu"
 		"zho"			"Super Smash Bros Menu"
-		"de"			"Super Smash Bros Menü"
 	}
 	"Main Menu Volume"
 	{
 		"#format"		""
 		"en"			"Volume Settings"
 		"zho"			"音量設定"
-		"de"			"Lautstärke Einstellungen"
 	}
 	"Main Menu Weapon"
 	{
 		"#format"		""
 		"en"			"Weapon Settings"
 		"zho"			"武器設定"
-		"de"			"Waffen Einstellungen"
 	}
 	"Volume Menu Title"
 	{
 		"#format"		"{1:s}"
 		"en"			"Volume Settings\nCurrent Volume:{1}\nUse !vol for fine tuning"
 		"zho"			"音量設定\n目前音量:{1}\n使用 !vol 微調"
-		"de"			"Lautstärke Einstellungen\nLautstärke:{1}\nBenutze !vol für Feineinstellungen"
 	}
 	"Mute"
 	{
 		"#format"		""
 		"en"			"Mute"
-		"zho"			"靜音"
-		"de"			"Stumm"
+		"zho"			"靜音"	
 	}
 	"Volume 1"
 	{
 		"#format"		""
-		"en"			"{GREEN}[SB] {NORMAL}Volume values must be {RED}0.0 - 1.0"
+		"en"			"{GREEN}[SB] {NORMAL}Volume values must be {RED}0.0- 1.0"
 		"zho"			"{GREEN}[SB] {NORMAL}音量大小限制為 {RED}0.0 - 1.0"
-		"de"			"{GREEN}[SB] {NORMAL}Lautstärkenwert muss zwischen {RED}0.0 - 1.0 {NORMAL}sein"
 	}
 	"Volume 2"
 	{
 		"#format"		"{1:.2f}"
 		"en"			"{GREEN}[SB] {NORMAL}Volume is set to {PINK}{1}"
 		"zho"			"{GREEN}[SB] {NORMAL}音量設定為 {PINK}{1}"
-		"de"			"{GREEN}[SB] {NORMAL}Lautstärke auf {PINK}{1} {NORMAL}gesetzt"
 	}
 	"Weapon Menu Title"
 	{
 		"#format"		""
 		"en"			"Weapon Settings"
 		"zho"			"武器設定"
-		"de"			"Waffen Einstellungen"
 	}
 	"Weapon Menu T Primary"
 	{
 		"#format"		""
 		"en"			"Terrorist Primary Weapon"
 		"zho"			"恐怖分子主武器"
-		"de"			"Terrorist Primär Waffe"
 	}
 	"Weapon Menu T Secondary"
 	{
 		"#format"		""
 		"en"			"Terrorist Secondary Settings"
 		"zho"			"恐怖分子副武器"
-		"de"			"Terrorist Sekundär Einstellungen"
 	}
 	"Weapon Menu CT Primary"
 	{
 		"#format"		""
 		"en"			"Counter-Terrorists Primary Weapon"
 		"zho"			"反恐小組主武器"
-		"de"			"Anti-Terroreinheit Primär Waffe"
 	}
 	"Weapon Menu CT Secondary"
 	{
 		"#format"		""
 		"en"			"Counter-Terrorists Secondary Settings"
 		"zho"			"反恐小組副武器"
-		"de"			"Anti-Terroreinheit Sekundär Einstellungen"
 	}
 	"T Primary Menu Title"
 	{
 		"#format"		""
 		"en"			"Select your Terrorist primary weapon"
 		"zho"			"選擇恐怖分子主武器"
-		"de"			"Wähle deine Primärwaffe für Terrorist"
 	}
 	"T Secondary Menu Title"
 	{
 		"#format"		""
 		"en"			"Select your Terrorist secondary weapon"
 		"zho"			"選擇恐怖分子副武器"
-		"de"			"Wähle deine Sekundärwaffe für Terrorist"
 	}
 	"CT Primary Menu Title"
 	{
 		"#format"		""
 		"en"			"Select your Counter-Terrorists primary weapon"
 		"zho"			"選擇恐怖分子主武器"
-		"de"			"Wähle deine Primärwaffe für Anti-Terroreinheit"
 	}
 	"CT Secondary Menu Title"
 	{
 		"#format"		""
 		"en"			"Select your Counter-Terrorists secondary weapon"
 		"zho"			"選擇恐怖分子副武器"
-		"de"			"Wähle deine Sekundärwaffe für Anti-Terroreinheit"
 	}
 	"T Primary Set"
 	{
 		"#format"		"{1:s}"
 		"en"			"{GREEN}[SB] {ORANGE}Terrorist {NORMAL}primary weapon set to {PINK}{1}"
 		"zho"			"{GREEN}[SB] {ORANGE}恐怖分子 {NORMAL}主武器設定為 {PINK}{1}"
-		"de"			"{GREEN}[SB] {ORANGE}Terroristen {NORMAL}Primärwaffe zu {PINK}{1} {NORMAL}gesetzt"
 	}
 	"T Secondary Set"
 	{
 		"#format"		"{1:s}"
 		"en"			"{GREEN}[SB] {ORANGE}Terrorist {NORMAL}secondary weapon set to {PINK}{1}"
 		"zho"			"{GREEN}[SB] {ORANGE}恐怖分子 {NORMAL}副武器設定為 {PINK}{1}"
-		"de"			"{GREEN}[SB] {ORANGE}Terroristen {NORMAL}Sekundärwaffe zu {PINK}{1} {NORMAL}gesetzt"
-		
 	}
 	"CT Primary Set"
 	{
 		"#format"		"{1:s}"
 		"en"			"{GREEN}[SB] {BLUE}Counter-Terrorists {NORMAL}primary weapon set to {PINK}{1}"
 		"zho"			"{GREEN}[SB] {BLUE}反恐小組 {NORMAL}主武器設定為 {PINK}{1}"
-		"de"			"{GREEN}[SB] {BLUE}Anti-Terroreinheit {NORMAL}Primärwaffe zu {PINK}{1} {NORMAL}gesetzt"
 	}
 	"CT Secondary Set"
 	{
 		"#format"		"{1:s}"
 		"en"			"{GREEN}[SB] {BLUE}Counter-Terrorists {NORMAL}secondary weapon set to {PINK}{1}"
 		"zho"			"{GREEN}[SB] {BLUE}反恐小組 {NORMAL}副武器設定為 {PINK}{1}"
-		"de"			"{GREEN}[SB] {BLUE}Anti-Terroreinheit {NORMAL}Sekundärwaffe zu {PINK}{1} {NORMAL}gesetzt"
 	}
 	"Item Spawned"
 	{
 		"#format"		""
 		"en"			"New items spawned on map!"
 		"zho"			"有新的道具出現在地圖上了!"
-		"de"			"Neue Items gespawned!"
 	}
 	"Spawn Item Args"
 	{
 		"#format"		""
 		"en"			"{GREEN}[SB] {NORMAL} Please use {PINK} sm_item <itemname> <count>"
 		"zho"			"{GREEN}[SB] {NORMAL} 請使用 {PINK} sm_item <道具名稱> <數量>"
-		"de"			"{GREEN}[SB] {NORMAL} Bitte verwende {PINK} sm_item <Itemname> <Anzahl>"
 	}
 }	
