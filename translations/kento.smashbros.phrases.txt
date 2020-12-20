@@ -36,8 +36,8 @@
 	"Volume Menu Title"
 	{
 		"#format"		"{1:s}"
-		"en"			"Volume Settings\nCurrent Volume:{1}\nUse !sbvol for fine tuning"
-		"zho"			"音量設定\n目前音量:{1}\n使用 !sbvol 微調"
+		"en"			"Volume Settings\nCurrent Volume:{1}\nUse !vol for fine tuning"
+		"zho"			"音量設定\n目前音量:{1}\n使用 !vol 微調"
 	}
 	"Mute"
 	{
