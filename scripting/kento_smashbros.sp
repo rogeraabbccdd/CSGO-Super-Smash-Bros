@@ -224,6 +224,7 @@ public void OnMapStart () {
     AcceptEntityInput(iEnt,"kill"); //Destroy the entity
   }
   
+  TriggerCount = 0;
   while((iEnt = FindEntityByClassname(iEnt, "trigger_hurt")) != -1) //Find buyzone
   {
     float dmg = GetEntPropFloat(iEnt, Prop_Data, "m_flDamage");
