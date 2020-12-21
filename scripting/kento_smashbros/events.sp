@@ -6,7 +6,7 @@ public Action Event_PlayerSpawn (Event event, const char[] name, bool dontBroadc
 
   fPlayerDMG[client] = 0.0;
 
-  CreateTimer(0.1, GiveWeapons, client);
+  CreateTimer(0.0, GiveWeapons, client);
 }
 
 public Action GiveWeapons(Handle timer, int client)
