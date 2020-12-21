@@ -85,14 +85,16 @@ void ResetClientStatus(int client) {
 
 int GetItemByChance (float chance) {
   int idx = -1;
-  float totalChance = 0.0;
+
   for(int i=0;i<itemCount;i++) {
-    totalChance += items[i].chance;
-    if(chance <= totalChance) {
-      idx = i;
+    if(chance > items[i].chance) {
+      continue;
+    } else {
+      idx = i-1;
       break;
     }
   }
+
   return idx;
 }
 

@@ -34,16 +34,16 @@ void LoadMapConfig(char [] mapname)
         kv.GetSectionName(name, sizeof(name));
         chance = kv.GetFloat(NULL_STRING, 0.0);
 
-        totalChace += chance;
         chanceStart = totalChace;
         items[itemCount].chance = chanceStart;
+        totalChace += chance;
         Format(items[itemCount].name, 64, "%s", name);
 
-        itemCount++;
-
         if(DEBUG) {
-          LogError("item name: %s, %f", name, chance);
+          LogError("item %d, name: %s, chance %f, chancestart %f", itemCount, name, chance, items[itemCount].chance);
         }
+
+        itemCount++;
       }
       while (kv.GotoNextKey(false));
     }
@@ -55,7 +55,7 @@ void LoadMapConfig(char [] mapname)
       LogError("Can't found any item in map config.");
     }
     if(DEBUG) {
-      LogError("spawnroundstart: %d, spawninterval: %f, spawnitems: %d", view_as<int>(spawnroundstart), spawninterval, spawnitems);
+      LogError("spawnroundstart: %d, spawninterval: %f, spawnitems: %d, totalChace %f", view_as<int>(spawnroundstart), spawninterval, spawnitems, totalChace);
     }
   }
   else
@@ -79,16 +79,16 @@ void LoadMapConfig(char [] mapname)
           kv.GetSectionName(name, sizeof(name));
           chance = kv.GetFloat(NULL_STRING, 0.0);
 
-          totalChace += chance;
           chanceStart = totalChace;
           items[itemCount].chance = chanceStart;
+          totalChace += chance;
           Format(items[itemCount].name, 64, "%s", name);
 
-          itemCount++;
-
           if(DEBUG) {
-            LogError("item name: %s, %f", name, chance);
+            LogError("item %d, name: %s, chance %f, chancestart %f", itemCount, name, chance, items[itemCount].chance);
           }
+
+          itemCount++;
         }
         while (kv.GotoNextKey(false));
       }
@@ -100,7 +100,7 @@ void LoadMapConfig(char [] mapname)
         LogError("Can't found any item in map config.");
       }
       if(DEBUG) {
-        LogError("spawnroundstart: %d, spawninterval: %f, spawnitems: %d", view_as<int>(spawnroundstart), spawninterval, spawnitems);
+        LogError("spawnroundstart: %d, spawninterval: %f, spawnitems: %d, totalChace %f", view_as<int>(spawnroundstart), spawninterval, spawnitems, totalChace);
       }
     }
     else {

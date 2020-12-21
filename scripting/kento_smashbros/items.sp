@@ -45,6 +45,10 @@ void SpawnItems() {
         Call_PushString(itemname);
         Call_PushArray(pos, sizeof(pos));
         Call_Finish();
+      } else {
+        if(DEBUG) {
+          LogError("Not found, chance %f", chance);
+        }
       }
     }
 
