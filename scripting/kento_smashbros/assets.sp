@@ -37,6 +37,11 @@ void LoadAssets() {
   FakePrecacheSound("*/kento_smashbros/sfx/cheer_m.mp3");
   FakePrecacheSound("*/kento_smashbros/sfx/cheer_l.mp3");
 
+  //Exosuit, Parachute pickup and success sounds not precached
+  PrecacheSound("survival/parachute_pickup_start_01.wav");
+  PrecacheSound("survival/parachute_pickup_success_01.wav");
+  PrecacheSound("survival/armor_pickup_01.wav");
+
   AddFileToDownloadsTable("materials/kento_smashbros/freeze_3.vmt");
   AddFileToDownloadsTable("materials/kento_smashbros/freeze_3.vtf");
   AddFileToDownloadsTable("materials/kento_smashbros/freeze_2.vmt");
