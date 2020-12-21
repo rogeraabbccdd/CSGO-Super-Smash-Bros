@@ -148,8 +148,10 @@ public void OnPluginStart()
 
   // Set damage to all players
   RegAdminCmd("sm_dmg", Command_Damage, ADMFLAG_GENERIC);
-  // Set damage to all players
+  // Spawn item
   RegAdminCmd("sm_item", Command_SpawnItem, ADMFLAG_GENERIC);
+  // Spawn items
+  RegAdminCmd("sm_items", Command_SpawnItems, ADMFLAG_GENERIC);
 
   if(DEBUG) {
     // Show all players' damage

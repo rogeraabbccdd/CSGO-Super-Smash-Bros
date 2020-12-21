@@ -95,3 +95,9 @@ public Action Command_SpawnItem(int client, int args)
 
   return Plugin_Handled;
 }
+
+public Action Command_SpawnItems(int client, int args)
+{
+  SpawnItems();
+  return Plugin_Handled;
+}
